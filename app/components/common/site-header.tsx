@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { getWatchTitleBySlug } from "@/data/watch-data";
 
 type HeaderTheme = {
   borderColor: string;
@@ -216,15 +217,42 @@ const navItems = [
   { label: "Market", href: "/market" },
 ];
 
+function getThemeBySectionAndGenre(section: "series" | "movies", genre: string) {
+  return hallThemes[`${section}-${genre}`] ?? defaultTheme;
+}
+
+function getThemeByWatchSlug(
+  slug: string,
+  sectionOverride?: "series" | "movies"
+): HeaderTheme {
+  const title = getWatchTitleBySlug(slug);
+
+  if (!title) {
+    return defaultTheme;
+  }
+
+  const section = sectionOverride ?? title.mode;
+  return getThemeBySectionAndGenre(section, title.genre);
+}
+
 function getHeaderTheme(pathname: string): HeaderTheme {
   const segments = pathname.split("/").filter(Boolean);
-  const section = segments[0] ?? "";
-  const genre = segments[1] ?? "";
+  const [section, second, third] = segments;
 
-  if ((section === "series" || section === "movies" || section === "discover") && genre) {
-    const themeSection = section === "discover" ? "series" : section;
-    const key = `${themeSection}-${genre}`;
-    return hallThemes[key] ?? defaultTheme;
+  if ((section === "series" || section === "movies") && second) {
+    return getThemeBySectionAndGenre(section, second);
+  }
+
+  if (section === "discover" && second && second !== "watch") {
+    return getThemeBySectionAndGenre("series", second);
+  }
+
+  if (section === "watch" && second) {
+    return getThemeByWatchSlug(second);
+  }
+
+  if (section === "discover" && second === "watch" && third) {
+    return getThemeByWatchSlug(third, "series");
   }
 
   if (pathname === "/series") return hallThemes["series-rofan"];
@@ -275,8 +303,9 @@ export default function SiteHeader() {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`inline-flex items-center gap-2 text-[15px] font-medium transition ${isActive ? theme.navActiveWrap : theme.navIdleWrap
-                  }`}
+                className={`inline-flex items-center gap-2 text-[15px] font-medium transition ${
+                  isActive ? theme.navActiveWrap : theme.navIdleWrap
+                }`}
               >
                 <span
                   style={{
@@ -299,6 +328,7 @@ export default function SiteHeader() {
             );
           })}
         </nav>
+
         <div className="flex min-w-[140px] items-center justify-end gap-2">
           <button
             type="button"

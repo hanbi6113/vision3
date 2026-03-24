@@ -6,110 +6,23 @@ import {
   genreMenu,
   type GenreKey,
 } from "@/data/discover-data";
+import {
+  discoverFreeSlugByGenre,
+  getWatchTitleBySlug,
+  watchEntrySlugByMode,
+  type WatchTitle,
+} from "@/data/watch-data";
 
 type Props = {
   activeGenre: GenreKey;
 };
 
 const genreImages: Record<GenreKey, string[]> = {
-  rofan: [
-    "/images/img1.jpg",
-    "/images/img2.jpg",
-    "/images/img3.jpg",
-    "/images/img4.jpg",
-  ],
-  romance: [
-    "/images/img5.jpg",
-    "/images/img6.jpg",
-    "/images/img7.jpg",
-    "/images/img8.jpg",
-  ],
-  sf: [
-    "/images/img9.jpg",
-    "/images/img10.jpg",
-    "/images/img11.jpg",
-    "/images/img12.jpg",
-  ],
-  murim: [
-    "/images/img13.jpg",
-    "/images/img14.jpg",
-    "/images/img15.jpg",
-    "/images/img16.jpg",
-  ],
-  horror: [
-    "/images/img17.jpg",
-    "/images/img18.jpg",
-    "/images/img19.jpg",
-    "/images/img20.jpg",
-  ],
-};
-
-const cardOrders: Record<GenreKey, number[]> = {
-  rofan: [0, 3, 1, 6, 4, 2, 7, 5, 9, 11, 8, 10],
-  romance: [2, 0, 5, 1, 7, 3, 6, 4, 10, 8, 11, 9],
-  sf: [1, 4, 0, 6, 3, 7, 2, 5, 11, 9, 8, 10],
-  murim: [3, 0, 6, 2, 5, 1, 7, 4, 8, 10, 9, 11],
-  horror: [5, 1, 6, 0, 7, 3, 4, 2, 10, 8, 11, 9],
-};
-
-const imageMixOrder = [2, 0, 3, 1, 1, 3, 0, 2, 3, 1, 2, 0];
-
-const titleSuffixes = [
-  "",
-  " · The Beginning",
-  " · Midnight Edit",
-  " · Selected Scene",
-  " · Royal Cut",
-  " · Signature",
-  " · Special Pick",
-  " · Editor's Choice",
-  " · Archive",
-  " · Main Story",
-  " · Visual Book",
-  " · Best Moment",
-];
-
-const subtitlePool: Record<GenreKey, string[]> = {
-  rofan: [
-    "로판 · 무료 1화 공개",
-    "로판 · 황궁 로맨스",
-    "로판 · 정략 관계",
-    "로판 · 지금 인기작",
-    "로판 · 세계관 중심",
-    "로판 · 감정선 큐레이션",
-  ],
-  romance: [
-    "로맨스 · 무료 1화 공개",
-    "로맨스 · 재회 멜로",
-    "로맨스 · 감정선 중심",
-    "로맨스 · 관계 서사",
-    "로맨스 · 타이밍",
-    "로맨스 · 여운 있는 작품",
-  ],
-  sf: [
-    "SF · 무료 1화 공개",
-    "SF · 미래 세계관",
-    "SF · 기억 복원",
-    "SF · 시스템 스릴",
-    "SF · 인터페이스 무드",
-    "SF · 차가운 서사",
-  ],
-  murim: [
-    "무협 · 무료 1화 공개",
-    "무협 · 강호 혈전",
-    "무협 · 문파 비사",
-    "무협 · 검객 귀환",
-    "무협 · 협객 서사",
-    "무협 · 무림 일전",
-  ],
-  horror: [
-    "공포 · 무료 1화 공개",
-    "공포 · 심리 스릴",
-    "공포 · 폐쇄 공간",
-    "공포 · 기록물 구조",
-    "공포 · 이상 징후",
-    "공포 · 사운드 연출",
-  ],
+  rofan: ["/images/img1.jpg", "/images/img2.jpg", "/images/img3.jpg", "/images/img4.jpg"],
+  romance: ["/images/img5.jpg", "/images/img6.jpg", "/images/img7.jpg", "/images/img8.jpg"],
+  sf: ["/images/img9.jpg", "/images/img10.jpg", "/images/img11.jpg", "/images/img12.jpg"],
+  murim: ["/images/img13.jpg", "/images/img14.jpg", "/images/img15.jpg", "/images/img16.jpg"],
+  horror: ["/images/img17.jpg", "/images/img18.jpg", "/images/img19.jpg", "/images/img20.jpg"],
 };
 
 const freeCtas = [
@@ -121,57 +34,50 @@ const freeCtas = [
   "1화 보러 가기",
 ];
 
+function repeatToLength<T>(items: T[], length: number) {
+  if (items.length === 0) return [];
+  return Array.from({ length }, (_, index) => items[index % items.length]);
+}
+
+function getDiscoverSeriesTitles(activeGenre: GenreKey) {
+  const seriesTitles = (discoverFreeSlugByGenre[activeGenre] ?? [])
+    .map((slug) => getWatchTitleBySlug(slug))
+    .filter((item): item is WatchTitle => Boolean(item))
+    .filter((item) => item.mode === "series");
+
+  if (seriesTitles.length > 0) {
+    return seriesTitles;
+  }
+
+  const fallback = getWatchTitleBySlug(watchEntrySlugByMode.series[activeGenre]);
+  return fallback ? [fallback] : [];
+}
+
 export default function DiscoverShell({ activeGenre }: Props) {
   const content = discoverData[activeGenre];
   const theme = content.theme;
   const currentImages = genreImages[activeGenre];
-  const heroImage = currentImages[0];
+  const discoverBasePath = `/discover/${activeGenre}`;
+  const discoverSeriesTitles = getDiscoverSeriesTitles(activeGenre);
+
+  const repeatedTitles = repeatToLength(discoverSeriesTitles, 12);
+  const heroTitle = repeatedTitles[0];
+  const sideCards = repeatedTitles.slice(1, 4);
+  const startCards = repeatedTitles.slice(0, 4);
+  const expandedCards = repeatedTitles.slice(0, 8);
+
+  const heroImage = heroTitle?.coverImage ?? currentImages[0];
+  const heroWatchHref = heroTitle
+    ? `/discover/watch/${heroTitle.slug}?returnTo=${encodeURIComponent(
+        discoverBasePath
+      )}`
+    : discoverBasePath;
 
   const isRofan = activeGenre === "rofan";
   const isRomance = activeGenre === "romance";
   const isSf = activeGenre === "sf";
   const isMurim = activeGenre === "murim";
   const isHorror = activeGenre === "horror";
-
-  const baseCards = Array.from({ length: 12 }, (_, index) => {
-    const base = content.panels[index % content.panels.length];
-    const suffix = titleSuffixes[index % titleSuffixes.length];
-    const subtitleList = subtitlePool[activeGenre];
-
-    return {
-      ...base,
-      title: `${base.title}${suffix}`,
-      image: currentImages[index % currentImages.length],
-      subtitle: subtitleList[index % subtitleList.length],
-      episode: `EP ${String(index + 1).padStart(2, "0")}`,
-      cta: freeCtas[index % freeCtas.length],
-    };
-  });
-
-  const expandedCards = cardOrders[activeGenre].map((cardIndex, index) => {
-    const base = baseCards[cardIndex];
-
-    return {
-      ...base,
-      image: currentImages[imageMixOrder[index] % currentImages.length],
-      cta: freeCtas[index % freeCtas.length],
-    };
-  });
-
-  const sideCards = Array.from({ length: 3 }, (_, index) => ({
-    title: content.notes[index % content.notes.length].title,
-    desc: content.notes[index % content.notes.length].desc,
-    image: currentImages[(index + 1) % currentImages.length],
-    label: freeCtas[index % freeCtas.length],
-  }));
-
-  const startCards = Array.from({ length: 4 }, (_, index) => ({
-    title: content.panels[index % content.panels.length].title,
-    desc: content.panels[index % content.panels.length].desc,
-    image: currentImages[index % currentImages.length],
-    subtitle: subtitlePool[activeGenre][index % subtitlePool[activeGenre].length],
-    cta: freeCtas[index % freeCtas.length],
-  }));
 
   const heroPrimaryChipClass = isRofan
     ? "border-[#f7bfd6] bg-white/75 text-[#c76790] shadow-sm"
@@ -181,9 +87,7 @@ export default function DiscoverShell({ activeGenre }: Props) {
         ? "border-[#2aa8cf] bg-transparent text-[#8aefff] shadow-[0_0_20px_rgba(42,168,207,0.12)]"
         : isMurim
           ? "border-[#c7b78b] bg-[#f5efde]/85 text-[#7d6a3d] shadow-sm"
-          : isHorror
-            ? "border-[#6c3139] bg-[#120d0f]/90 text-[#d7b2b8] shadow-[0_0_18px_rgba(108,49,57,0.16)]"
-            : "border-white/12 bg-white/10 text-white/80";
+          : "border-[#6c3139] bg-[#120d0f]/90 text-[#d7b2b8] shadow-[0_0_18px_rgba(108,49,57,0.16)]";
 
   const heroSecondaryChipClass = isRofan
     ? "border-[#f7cfe0] bg-[#fff7fb]/85 text-[#b96b8b]"
@@ -193,9 +97,7 @@ export default function DiscoverShell({ activeGenre }: Props) {
         ? "border-[#24556d] bg-transparent text-[#9ceeff]"
         : isMurim
           ? "border-[#d4c7a5] bg-[#fbf7ec]/90 text-[#8c7340]"
-          : isHorror
-            ? "border-[#4f2b31] bg-[#0f0b0c]/90 text-[#d5b0b6]"
-            : "border-white/12 bg-white/5 text-white/75";
+          : "border-[#4f2b31] bg-[#0f0b0c]/90 text-[#d5b0b6]";
 
   const primaryButtonClass = isRofan
     ? "bg-[linear-gradient(135deg,#ff9cc3,#ffc7df)] text-white shadow-[0_12px_24px_rgba(255,160,200,0.35)] hover:brightness-105"
@@ -205,9 +107,7 @@ export default function DiscoverShell({ activeGenre }: Props) {
         ? "border border-[#2aa8cf] bg-transparent text-[#8aefff] shadow-[0_0_24px_rgba(42,168,207,0.14)] hover:border-[#46cfff] hover:text-[#b6f6ff]"
         : isMurim
           ? "bg-[linear-gradient(135deg,#7c8b5d,#b79c64)] text-[#1c2015] shadow-[0_12px_24px_rgba(124,139,93,0.20)] hover:brightness-105"
-          : isHorror
-            ? "bg-[linear-gradient(135deg,#5a141f,#9b3040)] text-white shadow-[0_12px_24px_rgba(90,20,31,0.28)] hover:brightness-105"
-            : `${theme.accentBg} ${theme.accentTextDark} hover:opacity-90`;
+          : "bg-[linear-gradient(135deg,#5a141f,#9b3040)] text-white shadow-[0_12px_24px_rgba(90,20,31,0.28)] hover:brightness-105";
 
   const secondaryButtonClass = isRofan
     ? "border-[#f6c8da] bg-white/80 text-[#bb7391] hover:bg-white"
@@ -217,9 +117,7 @@ export default function DiscoverShell({ activeGenre }: Props) {
         ? "border-[#214f63] bg-transparent text-[#7ea6b8] hover:border-[#2f6f8b] hover:text-[#a3d8ec]"
         : isMurim
           ? "border-[#cdbf98] bg-[#f6f1e3] text-[#7a6840] hover:bg-white"
-          : isHorror
-            ? "border-[#4f2b31] bg-[#0f0b0c]/90 text-[#b59b9f] hover:border-[#744149] hover:text-[#d7b9bd]"
-            : "border-white/12 bg-white/5 text-white/78 hover:bg-white/10";
+          : "border-[#4f2b31] bg-[#0f0b0c]/90 text-[#b59b9f] hover:border-[#744149] hover:text-[#d7b9bd]";
 
   const cardButtonClass = isRofan
     ? "border-[#f6c8da] bg-[#fff8fb] text-[#bb7391] hover:bg-white"
@@ -229,13 +127,12 @@ export default function DiscoverShell({ activeGenre }: Props) {
         ? "border-[#214f63] bg-transparent text-[#8aefff] hover:border-[#2f6f8b] hover:text-[#b6f6ff]"
         : isMurim
           ? "border-[#d0c4a1] bg-[#f8f3e7] text-[#7a6840] hover:bg-white"
-          : isHorror
-            ? "border-[#4d2d33] bg-[#120e0f] text-[#d0b0b5] hover:border-[#744149] hover:text-[#ebc9cf]"
-            : "border-white/12 bg-white/5 text-white/80 hover:bg-white/10";
+          : "border-[#4d2d33] bg-[#120e0f] text-[#d0b0b5] hover:border-[#744149] hover:text-[#ebc9cf]";
 
   return (
     <main
-      className={`relative isolate min-h-screen overflow-hidden ${isRofan
+      className={`relative isolate min-h-screen overflow-hidden ${
+        isRofan
           ? "bg-[#fff8fc] text-[#6f4b67]"
           : isRomance
             ? "bg-[#faf6f2] text-[#4f3a3f]"
@@ -243,10 +140,8 @@ export default function DiscoverShell({ activeGenre }: Props) {
               ? "bg-[#061019] text-[#e8f7ff]"
               : isMurim
                 ? "bg-[#f4f0e4] text-[#4a4330]"
-                : isHorror
-                  ? "bg-[#060606] text-[#ede7e7]"
-                  : `${theme.page} ${theme.text}`
-        }`}
+                : "bg-[#060606] text-[#ede7e7]"
+      }`}
     >
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         {isRofan ? (
@@ -282,7 +177,7 @@ export default function DiscoverShell({ activeGenre }: Props) {
             <div className="absolute bottom-[-90px] left-[14%] h-[300px] w-[300px] rounded-full bg-[#d7dfcf] blur-[110px]" />
             <div className="absolute bottom-[-80px] right-[10%] h-[300px] w-[300px] rounded-full bg-[#efe7d3] blur-[110px]" />
           </>
-        ) : isHorror ? (
+        ) : (
           <>
             <div className="absolute inset-0 bg-[linear-gradient(180deg,#060606_0%,#0b090a_28%,#11090b_60%,#070707_100%)]" />
             <div className="absolute left-[-90px] top-[-100px] h-[320px] w-[320px] rounded-full bg-[#7d1f2a]/18 blur-[110px]" />
@@ -291,22 +186,13 @@ export default function DiscoverShell({ activeGenre }: Props) {
             <div className="absolute bottom-[-80px] right-[10%] h-[300px] w-[300px] rounded-full bg-[#1b2225]/10 blur-[120px]" />
             <div className="absolute inset-0 opacity-[0.06] bg-[radial-gradient(circle_at_center,white_0.6px,transparent_0.8px)] bg-[size:14px_14px]" />
           </>
-        ) : (
-          <>
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,#07080d_0%,#0b0d13_42%,#090a10_100%)]" />
-            <div
-              className={`absolute left-[-110px] top-[-70px] h-[300px] w-[300px] rounded-full blur-[120px] ${theme.glowA}`}
-            />
-            <div
-              className={`absolute right-[-90px] top-[120px] h-[260px] w-[260px] rounded-full blur-[120px] ${theme.glowB}`}
-            />
-          </>
         )}
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-5 pt-14 pb-8 md:px-8 lg:px-10">
+      <div className="relative z-10 mx-auto max-w-7xl px-5 pb-8 pt-14 md:px-8 lg:px-10">
         <div
-          className={`mb-8 flex flex-col gap-5 border-b pb-6 xl:flex-row xl:items-end xl:justify-between ${isRofan
+          className={`mb-8 flex flex-col gap-5 border-b pb-6 xl:flex-row xl:items-end xl:justify-between ${
+            isRofan
               ? "border-[#f0dbe5]"
               : isRomance
                 ? "border-[#e8ddda]"
@@ -314,14 +200,13 @@ export default function DiscoverShell({ activeGenre }: Props) {
                   ? "border-[#17384a]"
                   : isMurim
                     ? "border-[#d8d0ba]"
-                    : isHorror
-                      ? "border-[#2a1a1d]"
-                      : "border-white/10"
-            }`}
+                    : "border-[#2a1a1d]"
+          }`}
         >
           <div>
             <p
-              className={`text-xs font-bold uppercase tracking-[0.30em] ${isRofan
+              className={`text-xs font-bold uppercase tracking-[0.30em] ${
+                isRofan
                   ? "text-[#d17fa2]"
                   : isRomance
                     ? "text-[#b07a80]"
@@ -329,10 +214,8 @@ export default function DiscoverShell({ activeGenre }: Props) {
                       ? "text-[#8aefff]"
                       : isMurim
                         ? "text-[#8c8f5f]"
-                        : isHorror
-                          ? "text-[#c97882]"
-                          : theme.accentText
-                }`}
+                        : "text-[#c97882]"
+              }`}
             >
               Vision3 Discover
             </p>
@@ -340,7 +223,8 @@ export default function DiscoverShell({ activeGenre }: Props) {
               Discover
             </h1>
             <p
-              className={`mt-4 max-w-3xl text-sm leading-7 sm:text-base ${isRofan
+              className={`mt-4 max-w-3xl text-sm leading-7 sm:text-base ${
+                isRofan
                   ? "text-[#8f7186]"
                   : isRomance
                     ? "text-[#7d666d]"
@@ -348,10 +232,8 @@ export default function DiscoverShell({ activeGenre }: Props) {
                       ? "text-[#8fb4c3]"
                       : isMurim
                         ? "text-[#7a745f]"
-                        : isHorror
-                          ? "text-[#918585]"
-                          : "text-white/65"
-                }`}
+                        : "text-[#918585]"
+              }`}
             >
               누구나 가볍게 들어와서 무료 1화부터 시작할 수 있는 발견형 콘텐츠 공간.
             </p>
@@ -365,7 +247,8 @@ export default function DiscoverShell({ activeGenre }: Props) {
                 <Link
                   key={item.key}
                   href={`/discover/${item.key}`}
-                  className={`rounded-full px-4 py-2.5 text-sm font-semibold transition ${isRofan
+                  className={`rounded-full px-4 py-2.5 text-sm font-semibold transition ${
+                    isRofan
                       ? isActive
                         ? "border border-[#f6bfd8] bg-[#fff0f7] text-[#c76790] shadow-sm hover:bg-[#ffe8f3]"
                         : "bg-white/70 text-[#b46b89] hover:bg-white hover:text-[#c76790]"
@@ -381,14 +264,10 @@ export default function DiscoverShell({ activeGenre }: Props) {
                             ? isActive
                               ? "border border-[#c6ba92] bg-[#f2ecdc] text-[#695c37] shadow-sm hover:bg-[#ece4d0]"
                               : "bg-white/65 text-[#84785b] hover:bg-white hover:text-[#695c37]"
-                            : isHorror
-                              ? isActive
-                                ? "border border-[#6f2a34] bg-[#140d0f] text-[#e7c3c8] shadow-[0_0_22px_rgba(111,42,52,0.18)] hover:bg-[#1a0f12]"
-                                : "bg-[#0c0a0b]/80 text-[#8f7f82] hover:bg-[#121011] hover:text-[#c3a2a8]"
-                              : isActive
-                                ? `${theme.accentBg} ${theme.accentTextDark}`
-                                : "bg-white/5 text-white/72 hover:bg-white/10 hover:text-white"
-                    }`}
+                            : isActive
+                              ? "border border-[#6f2a34] bg-[#140d0f] text-[#e7c3c8] shadow-[0_0_22px_rgba(111,42,52,0.18)] hover:bg-[#1a0f12]"
+                              : "bg-[#0c0a0b]/80 text-[#8f7f82] hover:bg-[#121011] hover:text-[#c3a2a8]"
+                  }`}
                 >
                   {item.label}
                 </Link>
@@ -397,10 +276,10 @@ export default function DiscoverShell({ activeGenre }: Props) {
           </div>
         </div>
 
-        {/* hero + side cards */}
         <section className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
           <div
-            className={`h-full overflow-hidden rounded-[34px] border backdrop-blur-xl ${isRofan
+            className={`h-full overflow-hidden rounded-[34px] border backdrop-blur-xl ${
+              isRofan
                 ? "border-[#ffe0eb] bg-white/80 shadow-[0_24px_60px_rgba(255,192,218,0.18)]"
                 : isRomance
                   ? "border-[#e8dcda] bg-white/82 shadow-[0_24px_60px_rgba(183,155,156,0.12)]"
@@ -408,13 +287,12 @@ export default function DiscoverShell({ activeGenre }: Props) {
                     ? "border-[#1b4d63] bg-transparent shadow-[0_0_42px_rgba(41,175,214,0.10)]"
                     : isMurim
                       ? "border-[#ddd4bf] bg-[#f7f3e8]/84 shadow-[0_24px_60px_rgba(154,141,98,0.14)]"
-                      : isHorror
-                        ? "border-[#24181b] bg-[#0b0a0a]/92 shadow-[0_24px_60px_rgba(0,0,0,0.38)]"
-                        : "border-white/10 bg-[#111111]/90 shadow-[0_22px_50px_rgba(0,0,0,0.35)]"
-              }`}
+                      : "border-[#24181b] bg-[#0b0a0a]/92 shadow-[0_24px_60px_rgba(0,0,0,0.38)]"
+            }`}
           >
             <div
-              className={`relative h-full min-h-[560px] overflow-hidden ${isRofan
+              className={`relative h-full min-h-[560px] overflow-hidden ${
+                isRofan
                   ? "rounded-[28px] border border-[#ffe2ef]"
                   : isRomance
                     ? "rounded-[28px] border border-[#e9dfdc]"
@@ -422,21 +300,20 @@ export default function DiscoverShell({ activeGenre }: Props) {
                       ? "rounded-[28px] border border-[#1d5168]"
                       : isMurim
                         ? "rounded-[28px] border border-[#d6ccb5]"
-                        : isHorror
-                          ? "rounded-[28px] border border-[#2d1d21]"
-                          : ""
-                }`}
+                        : "rounded-[28px] border border-[#2d1d21]"
+              }`}
             >
               <Image
                 src={heroImage}
-                alt={`${content.label} main visual`}
+                alt={`${activeGenre} free hero`}
                 fill
                 className="object-cover"
                 sizes="(max-width: 1280px) 100vw, 55vw"
                 priority
               />
               <div
-                className={`absolute inset-0 ${isRofan
+                className={`absolute inset-0 ${
+                  isRofan
                     ? "bg-[linear-gradient(to_top,rgba(255,250,252,0.95)_10%,rgba(255,250,252,0.35)_48%,rgba(255,250,252,0.08)_100%)]"
                     : isRomance
                       ? "bg-[linear-gradient(to_top,rgba(255,250,251,0.92)_10%,rgba(255,250,251,0.28)_48%,rgba(255,250,251,0.08)_100%)]"
@@ -444,10 +321,8 @@ export default function DiscoverShell({ activeGenre }: Props) {
                         ? "bg-[linear-gradient(to_top,rgba(3,10,18,0.88)_10%,rgba(3,10,18,0.28)_48%,rgba(3,10,18,0.04)_100%)]"
                         : isMurim
                           ? "bg-[linear-gradient(to_top,rgba(244,240,228,0.88)_8%,rgba(244,240,228,0.22)_45%,rgba(244,240,228,0.06)_100%)]"
-                          : isHorror
-                            ? "bg-[linear-gradient(to_top,rgba(7,7,7,0.92)_8%,rgba(7,7,7,0.34)_45%,rgba(7,7,7,0.10)_100%)]"
-                            : "bg-[linear-gradient(to_top,rgba(0,0,0,0.84)_8%,rgba(0,0,0,0.24)_48%,rgba(0,0,0,0.06)_100%)]"
-                  }`}
+                          : "bg-[linear-gradient(to_top,rgba(7,7,7,0.92)_8%,rgba(7,7,7,0.34)_45%,rgba(7,7,7,0.10)_100%)]"
+                }`}
               />
 
               <div className="absolute left-6 top-6 flex flex-wrap gap-2">
@@ -465,7 +340,8 @@ export default function DiscoverShell({ activeGenre }: Props) {
 
               <div className="absolute bottom-0 left-0 right-0 p-7">
                 <p
-                  className={`text-xs font-bold uppercase tracking-[0.28em] ${isRofan
+                  className={`text-xs font-bold uppercase tracking-[0.28em] ${
+                    isRofan
                       ? "text-[#d17fa2]"
                       : isRomance
                         ? "text-[#b07a80]"
@@ -473,16 +349,15 @@ export default function DiscoverShell({ activeGenre }: Props) {
                           ? "text-[#8aefff]"
                           : isMurim
                             ? "text-[#8c8f5f]"
-                            : isHorror
-                              ? "text-[#c97882]"
-                              : theme.accentText
-                    }`}
+                            : "text-[#c97882]"
+                  }`}
                 >
-                  {content.hero.eyebrow}
+                  {heroTitle?.subtitle ?? content.hero.eyebrow}
                 </p>
 
                 <h2
-                  className={`mt-3 text-4xl font-extrabold leading-tight ${isRofan
+                  className={`mt-3 text-4xl font-extrabold leading-tight ${
+                    isRofan
                       ? "text-[#6f4b67]"
                       : isRomance
                         ? "text-[#4f3a3f]"
@@ -490,16 +365,15 @@ export default function DiscoverShell({ activeGenre }: Props) {
                           ? "text-[#e8f7ff]"
                           : isMurim
                             ? "text-[#413a2c]"
-                            : isHorror
-                              ? "text-[#f1ebeb]"
-                              : "text-white"
-                    }`}
+                            : "text-[#f1ebeb]"
+                  }`}
                 >
-                  {content.hero.title}
+                  {heroTitle?.title ?? content.hero.title}
                 </h2>
 
                 <p
-                  className={`mt-4 max-w-2xl text-sm leading-7 ${isRofan
+                  className={`mt-4 max-w-2xl text-sm leading-7 ${
+                    isRofan
                       ? "text-[#8f7186]"
                       : isRomance
                         ? "text-[#746166]"
@@ -507,16 +381,15 @@ export default function DiscoverShell({ activeGenre }: Props) {
                           ? "text-[#8fb4c3]"
                           : isMurim
                             ? "text-[#716958]"
-                            : isHorror
-                              ? "text-[#9d8f91]"
-                              : "text-white/75"
-                    }`}
+                            : "text-[#9d8f91]"
+                  }`}
                 >
-                  {content.hero.desc}
+                  {heroTitle?.description ?? content.hero.desc}
                 </p>
 
                 <div
-                  className={`mt-5 rounded-[20px] border px-4 py-4 text-sm ${isRofan
+                  className={`mt-5 rounded-[20px] border px-4 py-4 text-sm ${
+                    isRofan
                       ? "border-[#f6d7e4] bg-[#fff9fc] text-[#a56f86]"
                       : isRomance
                         ? "border-[#e8d7d8] bg-[#fcf8f8] text-[#8e6d72]"
@@ -524,136 +397,136 @@ export default function DiscoverShell({ activeGenre }: Props) {
                           ? "border-[#214f63] bg-transparent text-[#9ceeff]"
                           : isMurim
                             ? "border-[#d5c7a4] bg-[#fbf7ec] text-[#7a6840]"
-                            : isHorror
-                              ? "border-[#382126] bg-[#100c0d] text-[#ccb2b6]"
-                              : "border-white/12 bg-white/5 text-white/75"
-                    }`}
+                            : "border-[#382126] bg-[#100c0d] text-[#ccb2b6]"
+                  }`}
                 >
-                  무료 공개된 1화부터 바로 시작하고, 마음에 드는 작품을 카드형으로 빠르게 발견할 수 있어.
+                  디스커벌에서는 시리즈 1화만 무료로 공개돼. 다음 화는 락 처리되고 정식 시청으로 이어지게 돼.
                 </div>
 
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <button
-                    type="button"
+                  <Link
+                    href={heroWatchHref}
                     className={`rounded-full px-5 py-3 text-sm font-semibold transition ${primaryButtonClass}`}
                   >
                     1화 무료 보기
-                  </button>
+                  </Link>
 
-                  <button
-                    type="button"
+                  <a
+                    href="#discover-free-grid"
                     className={`rounded-full border px-5 py-3 text-sm font-medium transition ${secondaryButtonClass}`}
                   >
                     무료 공개작 둘러보기
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="grid gap-5">
-            {sideCards.map((card, index) => (
-              <article
-                key={`${card.title}-${index}`}
-                className={`overflow-hidden rounded-[30px] border backdrop-blur-xl ${isRofan
-                    ? "border-[#ffe0eb] bg-white/82 shadow-[0_18px_40px_rgba(255,186,211,0.18)]"
-                    : isRomance
-                      ? "border-[#e7d9d7] bg-white/84 shadow-[0_18px_40px_rgba(170,140,140,0.08)]"
-                      : isSf
-                        ? "border-[#1b4d63] bg-transparent shadow-[0_0_30px_rgba(41,175,214,0.08)]"
-                        : isMurim
-                          ? "border-[#ddd4bf] bg-[#f7f3e8]/86 shadow-[0_18px_40px_rgba(154,141,98,0.10)]"
-                          : isHorror
-                            ? "border-[#24181b] bg-[#0d0b0c]/92 shadow-[0_18px_40px_rgba(0,0,0,0.30)]"
-                            : "border-white/10 bg-[#101010]/85 shadow-[0_18px_40px_rgba(0,0,0,0.30)]"
+            {sideCards.map((card, index) => {
+              const href = `/discover/watch/${card.slug}?returnTo=${encodeURIComponent(
+                discoverBasePath
+              )}`;
+
+              return (
+                <article
+                  key={`${card.slug}-${index}`}
+                  className={`overflow-hidden rounded-[30px] border backdrop-blur-xl ${
+                    isRofan
+                      ? "border-[#ffe0eb] bg-white/82 shadow-[0_18px_40px_rgba(255,186,211,0.18)]"
+                      : isRomance
+                        ? "border-[#e7d9d7] bg-white/84 shadow-[0_18px_40px_rgba(170,140,140,0.08)]"
+                        : isSf
+                          ? "border-[#1b4d63] bg-transparent shadow-[0_0_30px_rgba(41,175,214,0.08)]"
+                          : isMurim
+                            ? "border-[#ddd4bf] bg-[#f7f3e8]/86 shadow-[0_18px_40px_rgba(154,141,98,0.10)]"
+                            : "border-[#24181b] bg-[#0d0b0c]/92 shadow-[0_18px_40px_rgba(0,0,0,0.30)]"
                   }`}
-              >
-                <div className="grid min-h-[172px] gap-0 md:grid-cols-[0.95fr_1.05fr]">
-                  <div className="relative min-h-[172px]">
-                    <Image
-                      src={card.image}
-                      alt={card.title}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.55),rgba(0,0,0,0.06))]" />
-                    <div className="absolute left-4 top-4 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
-                      무료 공개
+                >
+                  <div className="grid min-h-[172px] gap-0 md:grid-cols-[0.95fr_1.05fr]">
+                    <div className="relative min-h-[172px]">
+                      <Image
+                        src={card.coverImage}
+                        alt={card.title}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.55),rgba(0,0,0,0.06))]" />
+                      <div className="absolute left-4 top-4 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
+                        무료 공개
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="p-5">
-                    <p
-                      className={`text-xs font-bold uppercase tracking-[0.22em] ${isRofan
-                          ? "text-[#cf89a7]"
-                          : isRomance
-                            ? "text-[#b07a80]"
-                            : isSf
-                              ? "text-[#8aefff]"
-                              : isMurim
-                                ? "text-[#8c8f5f]"
-                                : isHorror
-                                  ? "text-[#c97882]"
-                                  : theme.accentText
+                    <div className="p-5">
+                      <p
+                        className={`text-xs font-bold uppercase tracking-[0.22em] ${
+                          isRofan
+                            ? "text-[#cf89a7]"
+                            : isRomance
+                              ? "text-[#b07a80]"
+                              : isSf
+                                ? "text-[#8aefff]"
+                                : isMurim
+                                  ? "text-[#8c8f5f]"
+                                  : "text-[#c97882]"
                         }`}
-                    >
-                      {card.label}
-                    </p>
-
-                    <h3
-                      className={`mt-3 text-xl font-extrabold ${isRofan
-                          ? "text-[#6f4b67]"
-                          : isRomance
-                            ? "text-[#4f3a3f]"
-                            : isSf
-                              ? "text-[#e8f7ff]"
-                              : isMurim
-                                ? "text-[#413a2c]"
-                                : isHorror
-                                  ? "text-[#f1ebeb]"
-                                  : "text-white"
-                        }`}
-                    >
-                      {card.title}
-                    </h3>
-
-                    <p
-                      className={`mt-3 text-sm leading-6 ${isRofan
-                          ? "text-[#8f7186]"
-                          : isRomance
-                            ? "text-[#746166]"
-                            : isSf
-                              ? "text-[#8fb4c3]"
-                              : isMurim
-                                ? "text-[#716958]"
-                                : isHorror
-                                  ? "text-[#998c8f]"
-                                  : "text-white/58"
-                        }`}
-                    >
-                      {card.desc}
-                    </p>
-
-                    <div className="mt-5">
-                      <button
-                        type="button"
-                        className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${cardButtonClass}`}
                       >
                         1화 무료 보기
-                      </button>
+                      </p>
+
+                      <h3
+                        className={`mt-3 text-xl font-extrabold ${
+                          isRofan
+                            ? "text-[#6f4b67]"
+                            : isRomance
+                              ? "text-[#4f3a3f]"
+                              : isSf
+                                ? "text-[#e8f7ff]"
+                                : isMurim
+                                  ? "text-[#413a2c]"
+                                  : "text-[#f1ebeb]"
+                        }`}
+                      >
+                        {card.title}
+                      </h3>
+
+                      <p
+                        className={`mt-3 text-sm leading-6 ${
+                          isRofan
+                            ? "text-[#8f7186]"
+                            : isRomance
+                              ? "text-[#746166]"
+                              : isSf
+                                ? "text-[#8fb4c3]"
+                                : isMurim
+                                  ? "text-[#716958]"
+                                : "text-[#998c8f]"
+                        }`}
+                      >
+                        {card.tagline}
+                      </p>
+
+                      <div className="mt-5">
+                        <Link
+                          href={href}
+                          className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${cardButtonClass}`}
+                        >
+                          1화 무료 보기
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </section>
 
-        {/* start cards */}
         <section className="pt-10">
           <div className="mb-5 flex items-end justify-between">
             <h2
-              className={`text-3xl font-extrabold ${isRofan
+              className={`text-3xl font-extrabold ${
+                isRofan
                   ? "text-[#7b5770]"
                   : isRomance
                     ? "text-[#4f3a3f]"
@@ -661,114 +534,114 @@ export default function DiscoverShell({ activeGenre }: Props) {
                       ? "text-[#e8f7ff]"
                       : isMurim
                         ? "text-[#413a2c]"
-                        : isHorror
-                          ? "text-[#f1ebeb]"
-                          : "text-[#433032]"
-                }`}
+                        : "text-[#f1ebeb]"
+              }`}
             >
               무료로 시작하기 좋은 카드
             </h2>
           </div>
 
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {startCards.map((item, index) => (
-              <article
-                key={`${item.title}-${index}`}
-                className={`overflow-hidden rounded-[28px] border ${isRofan
-                    ? "border-[#f1d6de] bg-white/82 shadow-[0_18px_40px_rgba(192,116,142,0.08)]"
-                    : isRomance
-                      ? "border-[#e7d9d7] bg-white/84 shadow-[0_18px_40px_rgba(170,140,140,0.08)]"
-                      : isSf
-                        ? "border-[#1b4d63] bg-transparent shadow-[0_0_28px_rgba(41,175,214,0.07)]"
-                        : isMurim
-                          ? "border-[#ddd4bf] bg-[#f7f3e8]/86 shadow-[0_18px_40px_rgba(154,141,98,0.10)]"
-                          : isHorror
-                            ? "border-[#24181b] bg-[#0d0b0c]/92 shadow-[0_18px_40px_rgba(0,0,0,0.28)]"
-                            : "border-[#dbc9c9] bg-white/82 shadow-[0_18px_40px_rgba(120,80,86,0.08)]"
-                  }`}
-              >
-                <div className="relative h-[240px]">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.58),rgba(0,0,0,0.08))]" />
-                  <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
-                    무료 시작
-                  </div>
-                </div>
+            {startCards.map((item, index) => {
+              const href = `/discover/watch/${item.slug}?returnTo=${encodeURIComponent(
+                discoverBasePath
+              )}`;
 
-                <div className="p-5">
-                  <p
-                    className={`text-sm font-semibold ${isRofan
-                        ? "text-[#c07a92]"
-                        : isRomance
-                          ? "text-[#b07a80]"
-                          : isSf
-                            ? "text-[#8aefff]"
+              return (
+                <article
+                  key={`${item.slug}-${index}`}
+                  className={`overflow-hidden rounded-[28px] border ${
+                    isRofan
+                      ? "border-[#f1d6de] bg-white/82 shadow-[0_18px_40px_rgba(192,116,142,0.08)]"
+                      : isRomance
+                        ? "border-[#e7d9d7] bg-white/84 shadow-[0_18px_40px_rgba(170,140,140,0.08)]"
+                        : isSf
+                          ? "border-[#1b4d63] bg-transparent shadow-[0_0_28px_rgba(41,175,214,0.07)]"
+                          : isMurim
+                            ? "border-[#ddd4bf] bg-[#f7f3e8]/86 shadow-[0_18px_40px_rgba(154,141,98,0.10)]"
+                            : "border-[#24181b] bg-[#0d0b0c]/92 shadow-[0_18px_40px_rgba(0,0,0,0.28)]"
+                  }`}
+                >
+                  <div className="relative h-[240px]">
+                    <Image
+                      src={item.coverImage}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.58),rgba(0,0,0,0.08))]" />
+                    <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
+                      무료 시작
+                    </div>
+                  </div>
+
+                  <div className="p-5">
+                    <p
+                      className={`text-sm font-semibold ${
+                        isRofan
+                          ? "text-[#c07a92]"
+                          : isRomance
+                            ? "text-[#b07a80]"
+                            : isSf
+                              ? "text-[#8aefff]"
                             : isMurim
                               ? "text-[#8c8f5f]"
-                              : isHorror
-                                ? "text-[#c97882]"
-                                : "text-[#9f757a]"
+                              : "text-[#c97882]"
                       }`}
-                  >
-                    {item.subtitle}
-                  </p>
-                  <h3
-                    className={`mt-2 text-xl font-extrabold ${isRofan
-                        ? "text-[#563b41]"
-                        : isRomance
-                          ? "text-[#4f3a3f]"
-                          : isSf
-                            ? "text-[#e8f7ff]"
-                            : isMurim
-                              ? "text-[#413a2c]"
-                              : isHorror
-                                ? "text-[#f1ebeb]"
-                                : "text-[#433032]"
-                      }`}
-                  >
-                    {item.title}
-                  </h3>
-                  <p
-                    className={`mt-3 text-sm leading-6 ${isRofan
-                        ? "text-[#79666b]"
-                        : isRomance
-                          ? "text-[#746166]"
-                          : isSf
-                            ? "text-[#8fb4c3]"
-                            : isMurim
-                              ? "text-[#716958]"
-                              : isHorror
-                                ? "text-[#968a8c]"
-                                : "text-[#6f5f62]"
-                      }`}
-                  >
-                    {item.desc}
-                  </p>
-
-                  <div className="mt-5">
-                    <button
-                      type="button"
-                      className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${cardButtonClass}`}
                     >
-                      {item.cta}
-                    </button>
+                      {item.subtitle}
+                    </p>
+                    <h3
+                      className={`mt-2 text-xl font-extrabold ${
+                        isRofan
+                          ? "text-[#563b41]"
+                          : isRomance
+                            ? "text-[#4f3a3f]"
+                            : isSf
+                              ? "text-[#e8f7ff]"
+                              : isMurim
+                                ? "text-[#413a2c]"
+                                : "text-[#f1ebeb]"
+                      }`}
+                    >
+                      {item.title}
+                    </h3>
+                    <p
+                      className={`mt-3 text-sm leading-6 ${
+                        isRofan
+                          ? "text-[#79666b]"
+                          : isRomance
+                            ? "text-[#746166]"
+                            : isSf
+                              ? "text-[#8fb4c3]"
+                              : isMurim
+                                ? "text-[#716958]"
+                                : "text-[#968a8c]"
+                      }`}
+                    >
+                      {item.tagline}
+                    </p>
+
+                    <div className="mt-5">
+                      <Link
+                        href={href}
+                        className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${cardButtonClass}`}
+                      >
+                        {freeCtas[index % freeCtas.length]}
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </section>
 
-        {/* main free cards */}
-        <section className="pb-10 pt-10">
+        <section id="discover-free-grid" className="pb-10 pt-10">
           <div className="mb-5 flex items-end justify-between">
             <h2
-              className={`text-3xl font-extrabold ${isRofan
+              className={`text-3xl font-extrabold ${
+                isRofan
                   ? "text-[#7b5770]"
                   : isRomance
                     ? "text-[#4f3a3f]"
@@ -776,113 +649,110 @@ export default function DiscoverShell({ activeGenre }: Props) {
                       ? "text-[#e8f7ff]"
                       : isMurim
                         ? "text-[#413a2c]"
-                        : isHorror
-                          ? "text-[#f1ebeb]"
-                          : "text-[#433032]"
-                }`}
+                        : "text-[#f1ebeb]"
+              }`}
             >
               지금 인기 있는 무료 1화
             </h2>
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {expandedCards.map((item, index) => (
-              <article
-                key={`${item.title}-${index}`}
-                className={`overflow-hidden rounded-[28px] border ${isRofan
-                    ? "border-[#f1d6de] bg-white/82 shadow-[0_18px_40px_rgba(192,116,142,0.08)]"
-                    : isRomance
-                      ? "border-[#e7d9d7] bg-white/84 shadow-[0_18px_40px_rgba(170,140,140,0.08)]"
-                      : isSf
-                        ? "border-[#1b4d63] bg-transparent shadow-[0_0_28px_rgba(41,175,214,0.07)]"
-                        : isMurim
-                          ? "border-[#ddd4bf] bg-[#f7f3e8]/86 shadow-[0_18px_40px_rgba(154,141,98,0.10)]"
-                          : isHorror
-                            ? "border-[#24181b] bg-[#0d0b0c]/92 shadow-[0_18px_40px_rgba(0,0,0,0.28)]"
-                            : "border-[#dbc9c9] bg-white/82 shadow-[0_18px_40px_rgba(120,80,86,0.08)]"
+            {expandedCards.map((item, index) => {
+              const href = `/discover/watch/${item.slug}?returnTo=${encodeURIComponent(
+                discoverBasePath
+              )}`;
+
+              return (
+                <article
+                  key={`${item.slug}-${index}`}
+                  className={`overflow-hidden rounded-[28px] border ${
+                    isRofan
+                      ? "border-[#f1d6de] bg-white/82 shadow-[0_18px_40px_rgba(192,116,142,0.08)]"
+                      : isRomance
+                        ? "border-[#e7d9d7] bg-white/84 shadow-[0_18px_40px_rgba(170,140,140,0.08)]"
+                        : isSf
+                          ? "border-[#1b4d63] bg-transparent shadow-[0_0_28px_rgba(41,175,214,0.07)]"
+                          : isMurim
+                            ? "border-[#ddd4bf] bg-[#f7f3e8]/86 shadow-[0_18px_40px_rgba(154,141,98,0.10)]"
+                            : "border-[#24181b] bg-[#0d0b0c]/92 shadow-[0_18px_40px_rgba(0,0,0,0.28)]"
                   }`}
-              >
-                <div className="relative h-[280px]">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 33vw"
-                  />
-                  <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.60),rgba(0,0,0,0.08))]" />
+                >
+                  <div className="relative h-[280px]">
+                    <Image
+                      src={item.coverImage}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 100vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.60),rgba(0,0,0,0.08))]" />
 
-                  <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
-                    1화 무료 공개
+                    <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
+                      1화 무료 공개
+                    </div>
                   </div>
-                  <div className="absolute right-4 top-4 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
-                    {item.episode}
-                  </div>
-                </div>
 
-                <div className="p-6">
-                  <p
-                    className={`text-sm font-semibold ${isRofan
-                        ? "text-[#c07a92]"
-                        : isRomance
-                          ? "text-[#b07a80]"
-                          : isSf
-                            ? "text-[#8aefff]"
-                            : isMurim
-                              ? "text-[#8c8f5f]"
-                              : isHorror
-                                ? "text-[#c97882]"
-                                : "text-[#9f757a]"
+                  <div className="p-6">
+                    <p
+                      className={`text-sm font-semibold ${
+                        isRofan
+                          ? "text-[#c07a92]"
+                          : isRomance
+                            ? "text-[#b07a80]"
+                            : isSf
+                              ? "text-[#8aefff]"
+                              : isMurim
+                                ? "text-[#8c8f5f]"
+                                : "text-[#c97882]"
                       }`}
-                  >
-                    {item.subtitle}
-                  </p>
-
-                  <h3
-                    className={`mt-2 text-2xl font-extrabold ${isRofan
-                        ? "text-[#563b41]"
-                        : isRomance
-                          ? "text-[#4f3a3f]"
-                          : isSf
-                            ? "text-[#e8f7ff]"
-                            : isMurim
-                              ? "text-[#413a2c]"
-                              : isHorror
-                                ? "text-[#f1ebeb]"
-                                : "text-[#433032]"
-                      }`}
-                  >
-                    {item.title}
-                  </h3>
-
-                  <p
-                    className={`mt-3 text-sm leading-7 ${isRofan
-                        ? "text-[#79666b]"
-                        : isRomance
-                          ? "text-[#746166]"
-                          : isSf
-                            ? "text-[#8fb4c3]"
-                            : isMurim
-                              ? "text-[#716958]"
-                              : isHorror
-                                ? "text-[#968a8c]"
-                                : "text-[#6f5f62]"
-                      }`}
-                  >
-                    {item.desc}
-                  </p>
-
-                  <div className="mt-5">
-                    <button
-                      type="button"
-                      className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${cardButtonClass}`}
                     >
-                      {item.cta}
-                    </button>
+                      {item.subtitle}
+                    </p>
+
+                    <h3
+                      className={`mt-2 text-2xl font-extrabold ${
+                        isRofan
+                          ? "text-[#563b41]"
+                          : isRomance
+                            ? "text-[#4f3a3f]"
+                            : isSf
+                              ? "text-[#e8f7ff]"
+                              : isMurim
+                                ? "text-[#413a2c]"
+                                : "text-[#f1ebeb]"
+                      }`}
+                    >
+                      {item.title}
+                    </h3>
+
+                    <p
+                      className={`mt-3 text-sm leading-7 ${
+                        isRofan
+                          ? "text-[#79666b]"
+                          : isRomance
+                            ? "text-[#746166]"
+                            : isSf
+                              ? "text-[#8fb4c3]"
+                              : isMurim
+                                ? "text-[#716958]"
+                                : "text-[#968a8c]"
+                      }`}
+                    >
+                      {item.description}
+                    </p>
+
+                    <div className="mt-5">
+                      <Link
+                        href={href}
+                        className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${cardButtonClass}`}
+                      >
+                        {freeCtas[index % freeCtas.length]}
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </section>
       </div>

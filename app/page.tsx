@@ -53,23 +53,34 @@ const marketFeatureVideo = {
 function SectionHeader({
   title,
   action,
+  actionHref,
 }: {
   title: string;
   action?: string;
+  actionHref?: string;
 }) {
   return (
     <div className="mb-5 flex items-end justify-between">
       <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
         {title}
       </h2>
-      {action && (
-        <button
-          type="button"
-          className="text-sm font-medium text-white/55 transition hover:text-white"
-        >
-          {action}
-        </button>
-      )}
+
+      {action &&
+        (actionHref ? (
+          <Link
+            href={actionHref}
+            className="text-sm font-medium text-white/55 transition hover:text-white"
+          >
+            {action}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            className="text-sm font-medium text-white/55 transition hover:text-white"
+          >
+            {action}
+          </button>
+        ))}
     </div>
   );
 }
@@ -95,11 +106,13 @@ function PosterCard({
           className="object-cover transition duration-700 group-hover:scale-[1.04]"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.06)_0%,rgba(0,0,0,0.18)_38%,rgba(0,0,0,0.82)_100%)]" />
+
         {badge && (
           <div className="absolute left-4 top-4 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur">
             {badge}
           </div>
         )}
+
         <div className="absolute inset-x-0 bottom-0 p-4">
           <p className="text-lg font-semibold text-white">{title}</p>
           <p className="mt-1 text-sm text-white/72">{subtitle}</p>
@@ -156,11 +169,12 @@ export default function HomePage() {
 
                   <div className="flex flex-wrap items-center gap-3 pt-2">
                     <Link
-                      href="/series"
+                      href="/watch/the-last-scene-of-summer"
                       className="inline-flex items-center rounded-full border border-white/12 bg-white/10 px-6 py-3 text-sm font-medium text-white transition hover:bg-white/15"
                     >
                       ▶ 재생
                     </Link>
+
                     <Link
                       href="/discover"
                       className="inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-6 py-3 text-sm font-medium text-cyan-100 transition hover:bg-cyan-400/15"
@@ -177,6 +191,7 @@ export default function HomePage() {
                       <p className="mt-2 text-lg font-semibold text-white">OTT First</p>
                       <p className="mt-1 text-sm text-white/60">프리미엄 스트리밍 중심</p>
                     </div>
+
                     <div className="rounded-2xl border border-white/10 bg-black/20 p-4 backdrop-blur">
                       <p className="text-[11px] uppercase tracking-[0.18em] text-white/42">
                         Discovery
@@ -184,6 +199,7 @@ export default function HomePage() {
                       <p className="mt-2 text-lg font-semibold text-white">Free Entry</p>
                       <p className="mt-1 text-sm text-white/60">무료 탐색 유입 구조</p>
                     </div>
+
                     <div className="rounded-2xl border border-white/10 bg-black/20 p-4 backdrop-blur">
                       <p className="text-[11px] uppercase tracking-[0.18em] text-white/42">
                         Extension
@@ -200,7 +216,12 @@ export default function HomePage() {
       </div>
 
       <section className="mx-auto max-w-7xl px-5 py-8 md:px-8 md:py-12">
-        <SectionHeader title="계속 시청하기" action="전체 보기" />
+        <SectionHeader
+          title="계속 시청하기"
+          action="전체 보기"
+          actionHref="/continue-watching"
+        />
+
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {continueWatching.map((item) => (
             <article
@@ -231,7 +252,12 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-8 md:px-8 md:py-12">
-        <SectionHeader title="Top 10 in Vision3" action="순위 보기" />
+        <SectionHeader
+          title="Top 10 in Vision3"
+          action="순위 보기"
+          actionHref="/rankings"
+        />
+
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
           {topTen.map((item) => (
             <article
@@ -244,6 +270,7 @@ export default function HomePage() {
                 <div className="absolute left-4 top-3 text-6xl font-black text-white/90">
                   {item.rank}
                 </div>
+
                 <div className="absolute inset-x-0 bottom-0 p-4">
                   <p className="text-lg font-semibold text-white">{item.title}</p>
                   <p className="mt-1 text-sm text-white/70">{item.subtitle}</p>
@@ -255,8 +282,13 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-8 md:px-8 md:py-12">
-        <SectionHeader title="지금 인기 콘텐츠" action="더 보기" />
-        <div className="grid gap-5 grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+        <SectionHeader
+          title="지금 인기 콘텐츠"
+          action="더 보기"
+          actionHref="/rankings"
+        />
+
+        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-6">
           {trendingNow.map((item) => (
             <PosterCard
               key={item.title}
@@ -270,7 +302,12 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-8 md:px-8 md:py-12">
-        <SectionHeader title="Discover Free" action="Discover 이동" />
+        <SectionHeader
+          title="Discover Free"
+          action="Discover 이동"
+          actionHref="/discover"
+        />
+
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {discoverFree.map((item) => (
             <article
@@ -284,6 +321,7 @@ export default function HomePage() {
                   Free
                 </div>
               </div>
+
               <div className="p-5">
                 <h3 className="text-lg font-semibold text-white">{item.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-white/62">{item.subtitle}</p>
@@ -295,6 +333,7 @@ export default function HomePage() {
 
       <section className="mx-auto max-w-7xl px-5 py-8 md:px-8 md:py-12">
         <SectionHeader title="Market" />
+
         <div className="overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.03]">
           <div className="relative h-[620px] md:h-[760px]">
             <video
@@ -307,6 +346,7 @@ export default function HomePage() {
               preload="metadata"
             />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.06)_0%,rgba(0,0,0,0.22)_42%,rgba(0,0,0,0.84)_100%)]" />
+
             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
               <Link
                 href="/market"

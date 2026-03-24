@@ -1,4 +1,8 @@
 // components/media/media-shell.tsx
+import {
+  discoverFreeSlugByGenre,
+  watchEntrySlugByMode,
+} from "@/data/watch-data";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -15,36 +19,11 @@ type Props = {
 };
 
 const genreImages: Record<GenreKey, string[]> = {
-  rofan: [
-    "/images/img1.jpg",
-    "/images/img2.jpg",
-    "/images/img3.jpg",
-    "/images/img4.jpg",
-  ],
-  romance: [
-    "/images/img5.jpg",
-    "/images/img6.jpg",
-    "/images/img7.jpg",
-    "/images/img8.jpg",
-  ],
-  sf: [
-    "/images/img9.jpg",
-    "/images/img10.jpg",
-    "/images/img11.jpg",
-    "/images/img12.jpg",
-  ],
-  murim: [
-    "/images/img13.jpg",
-    "/images/img14.jpg",
-    "/images/img15.jpg",
-    "/images/img16.jpg",
-  ],
-  horror: [
-    "/images/img17.jpg",
-    "/images/img18.jpg",
-    "/images/img19.jpg",
-    "/images/img20.jpg",
-  ],
+  rofan: ["/images/img1.jpg", "/images/img2.jpg", "/images/img3.jpg", "/images/img4.jpg"],
+  romance: ["/images/img5.jpg", "/images/img6.jpg", "/images/img7.jpg", "/images/img8.jpg"],
+  sf: ["/images/img9.jpg", "/images/img10.jpg", "/images/img11.jpg", "/images/img12.jpg"],
+  murim: ["/images/img13.jpg", "/images/img14.jpg", "/images/img15.jpg", "/images/img16.jpg"],
+  horror: ["/images/img17.jpg", "/images/img18.jpg", "/images/img19.jpg", "/images/img20.jpg"],
 };
 
 const progressValues = ["74%", "48%", "63%", "29%"];
@@ -189,6 +168,19 @@ export default function MediaShell({ activeGenre, mode }: Props) {
   const copy = copyByMode[mode][activeGenre];
 
   const routeBase = mode === "series" ? "series" : "movies";
+  const hallPath = `/${routeBase}/${activeGenre}`;
+  const watchHref = `/watch/${watchEntrySlugByMode[mode][activeGenre]}?returnTo=${encodeURIComponent(
+    hallPath
+  )}`;
+
+  const freeDiscoverSlug =
+    discoverFreeSlugByGenre[activeGenre]?.[0] ??
+    watchEntrySlugByMode.series[activeGenre];
+
+  const freeEpisodeHref = `/discover/watch/${freeDiscoverSlug}?returnTo=${encodeURIComponent(
+    hallPath
+  )}`;
+
   const brandLabel = mode === "series" ? "Vision3 Drama" : "Vision3 Movie";
   const pageTitle = mode === "series" ? "Drama" : "Movie";
   const pageDesc =
@@ -242,98 +234,82 @@ export default function MediaShell({ activeGenre, mode }: Props) {
   const titleColorClass = isRofan
     ? "text-[#6f4b67]"
     : isRomance
-    ? "text-[#4f3a3f]"
-    : isSf
-    ? "text-[#e8f7ff]"
-    : isMurim
-    ? "text-[#413a2c]"
-    : isHorror
-    ? "text-[#f1ebeb]"
-    : "text-white";
+      ? "text-[#4f3a3f]"
+      : isSf
+        ? "text-[#e8f7ff]"
+        : isMurim
+          ? "text-[#413a2c]"
+          : "text-[#f1ebeb]";
 
   const bodyColorClass = isRofan
     ? "text-[#8f7186]"
     : isRomance
-    ? "text-[#746166]"
-    : isSf
-    ? "text-[#8fb4c3]"
-    : isMurim
-    ? "text-[#716958]"
-    : isHorror
-    ? "text-[#968a8c]"
-    : "text-white/65";
+      ? "text-[#746166]"
+      : isSf
+        ? "text-[#8fb4c3]"
+        : isMurim
+          ? "text-[#716958]"
+          : "text-[#968a8c]";
 
   const accentColorClass = isRofan
     ? "text-[#d17fa2]"
     : isRomance
-    ? "text-[#b07a80]"
-    : isSf
-    ? "text-[#8aefff]"
-    : isMurim
-    ? "text-[#8c8f5f]"
-    : isHorror
-    ? "text-[#c97882]"
-    : theme.accentText;
+      ? "text-[#b07a80]"
+      : isSf
+        ? "text-[#8aefff]"
+        : isMurim
+          ? "text-[#8c8f5f]"
+          : "text-[#c97882]";
 
   const shellClass = isRofan
     ? "border-[#f1d6de] bg-white/82 shadow-[0_18px_40px_rgba(192,116,142,0.08)]"
     : isRomance
-    ? "border-[#e7d9d7] bg-white/84 shadow-[0_18px_40px_rgba(170,140,140,0.08)]"
-    : isSf
-    ? "border-[#1b4d63] bg-transparent shadow-[0_0_28px_rgba(41,175,214,0.07)]"
-    : isMurim
-    ? "border-[#ddd4bf] bg-[#f7f3e8]/86 shadow-[0_18px_40px_rgba(154,141,98,0.10)]"
-    : isHorror
-    ? "border-[#24181b] bg-[#0d0b0c]/92 shadow-[0_18px_40px_rgba(0,0,0,0.28)]"
-    : "border-white/10 bg-white/[0.04]";
+      ? "border-[#e7d9d7] bg-white/84 shadow-[0_18px_40px_rgba(170,140,140,0.08)]"
+      : isSf
+        ? "border-[#1b4d63] bg-transparent shadow-[0_0_28px_rgba(41,175,214,0.07)]"
+        : isMurim
+          ? "border-[#ddd4bf] bg-[#f7f3e8]/86 shadow-[0_18px_40px_rgba(154,141,98,0.10)]"
+          : "border-[#24181b] bg-[#0d0b0c]/92 shadow-[0_18px_40px_rgba(0,0,0,0.28)]";
 
   const chipClass = isRofan
     ? "border-[#f7bfd6] bg-white/75 text-[#c76790] shadow-sm"
     : isRomance
-    ? "border-[#e5d4d6] bg-white/78 text-[#b07a80] shadow-sm"
-    : isSf
-    ? "border-[#2aa8cf] bg-transparent text-[#8aefff] shadow-[0_0_20px_rgba(42,168,207,0.12)]"
-    : isMurim
-    ? "border-[#c7b78b] bg-[#f5efde]/85 text-[#7d6a3d] shadow-sm"
-    : isHorror
-    ? "border-[#6c3139] bg-[#120d0f]/90 text-[#d7b2b8] shadow-[0_0_18px_rgba(108,49,57,0.16)]"
-    : "border-white/12 bg-white/10 text-white/80";
+      ? "border-[#e5d4d6] bg-white/78 text-[#b07a80] shadow-sm"
+      : isSf
+        ? "border-[#2aa8cf] bg-transparent text-[#8aefff] shadow-[0_0_20px_rgba(42,168,207,0.12)]"
+        : isMurim
+          ? "border-[#c7b78b] bg-[#f5efde]/85 text-[#7d6a3d] shadow-sm"
+          : "border-[#6c3139] bg-[#120d0f]/90 text-[#d7b2b8] shadow-[0_0_18px_rgba(108,49,57,0.16)]";
 
   const softChipClass = isRofan
     ? "border-[#f7cfe0] bg-[#fff7fb]/85 text-[#b96b8b]"
     : isRomance
-    ? "border-[#ead8da] bg-[#fff8f8]/85 text-[#9f7378]"
-    : isSf
-    ? "border-[#24556d] bg-transparent text-[#9ceeff]"
-    : isMurim
-    ? "border-[#d4c7a5] bg-[#fbf7ec]/90 text-[#8c7340]"
-    : isHorror
-    ? "border-[#4f2b31] bg-[#0f0b0c]/90 text-[#d5b0b6]"
-    : "border-white/12 bg-white/5 text-white/75";
+      ? "border-[#ead8da] bg-[#fff8f8]/85 text-[#9f7378]"
+      : isSf
+        ? "border-[#24556d] bg-transparent text-[#9ceeff]"
+        : isMurim
+          ? "border-[#d4c7a5] bg-[#fbf7ec]/90 text-[#8c7340]"
+          : "border-[#4f2b31] bg-[#0f0b0c]/90 text-[#d5b0b6]";
 
   const primaryButtonClass = isRofan
     ? "bg-[linear-gradient(135deg,#ff9cc3,#ffc7df)] text-white shadow-[0_12px_24px_rgba(255,160,200,0.35)] hover:brightness-105"
     : isRomance
-    ? "bg-[linear-gradient(135deg,#b7797f,#d4a29a)] text-white shadow-[0_12px_24px_rgba(183,121,127,0.22)] hover:brightness-105"
-    : isSf
-    ? "border border-[#2aa8cf] bg-transparent text-[#8aefff] shadow-[0_0_24px_rgba(42,168,207,0.14)] hover:border-[#46cfff] hover:text-[#b6f6ff]"
-    : isMurim
-    ? "bg-[linear-gradient(135deg,#7c8b5d,#b79c64)] text-[#1c2015] shadow-[0_12px_24px_rgba(124,139,93,0.20)] hover:brightness-105"
-    : isHorror
-    ? "bg-[linear-gradient(135deg,#5a141f,#9b3040)] text-white shadow-[0_12px_24px_rgba(90,20,31,0.28)] hover:brightness-105"
-    : `${theme.accentBg} ${theme.accentTextDark} hover:opacity-90`;
+      ? "bg-[linear-gradient(135deg,#b7797f,#d4a29a)] text-white shadow-[0_12px_24px_rgba(183,121,127,0.22)] hover:brightness-105"
+      : isSf
+        ? "border border-[#2aa8cf] bg-transparent text-[#8aefff] shadow-[0_0_24px_rgba(42,168,207,0.14)] hover:border-[#46cfff] hover:text-[#b6f6ff]"
+        : isMurim
+          ? "bg-[linear-gradient(135deg,#7c8b5d,#b79c64)] text-[#1c2015] shadow-[0_12px_24px_rgba(124,139,93,0.20)] hover:brightness-105"
+          : "bg-[linear-gradient(135deg,#5a141f,#9b3040)] text-white shadow-[0_12px_24px_rgba(90,20,31,0.28)] hover:brightness-105";
 
   const secondaryButtonClass = isRofan
     ? "border-[#f6c8da] bg-white/80 text-[#bb7391] hover:bg-white"
     : isRomance
-    ? "border-[#e4d2d3] bg-white/78 text-[#8d6b70] hover:bg-white"
-    : isSf
-    ? "border-[#214f63] bg-transparent text-[#7ea6b8] hover:border-[#2f6f8b] hover:text-[#a3d8ec]"
-    : isMurim
-    ? "border-[#cdbf98] bg-[#f6f1e3] text-[#7a6840] hover:bg-white"
-    : isHorror
-    ? "border-[#4f2b31] bg-[#0f0b0c]/90 text-[#b59b9f] hover:border-[#744149] hover:text-[#d7b9bd]"
-    : "border-white/12 bg-white/5 text-white/78 hover:bg-white/10";
+      ? "border-[#e4d2d3] bg-white/78 text-[#8d6b70] hover:bg-white"
+      : isSf
+        ? "border-[#214f63] bg-transparent text-[#7ea6b8] hover:border-[#2f6f8b] hover:text-[#a3d8ec]"
+        : isMurim
+          ? "border-[#cdbf98] bg-[#f6f1e3] text-[#7a6840] hover:bg-white"
+          : "border-[#4f2b31] bg-[#0f0b0c]/90 text-[#b59b9f] hover:border-[#744149] hover:text-[#d7b9bd]";
 
   return (
     <main
@@ -341,30 +317,25 @@ export default function MediaShell({ activeGenre, mode }: Props) {
         isRofan
           ? "text-[#6f4b67]"
           : isRomance
-          ? "text-[#4f3a3f]"
-          : isSf
-          ? "text-[#e8f7ff]"
-          : isMurim
-          ? "text-[#4a4330]"
-          : isHorror
-          ? "text-[#ede7e7]"
-          : `${theme.text}`
+            ? "text-[#4f3a3f]"
+            : isSf
+              ? "text-[#e8f7ff]"
+              : isMurim
+                ? "text-[#4a4330]"
+                : "text-[#ede7e7]"
       }`}
     >
       <div className="fixed inset-0 -z-10 overflow-hidden">
         {isRofan ? (
-            <>
+          <>
             <div className="absolute inset-0 bg-[linear-gradient(180deg,#fff8fc_0%,#fff6fb_18%,#fff8fc_48%,#f8fbff_100%)]" />
-
             <div className="absolute left-[-185px] top-[-350px] h-[700px] w-[700px] rounded-full bg-[#ffd8ec] blur-[165px]" />
             <div className="absolute left-[15%] top-[-185px] h-[470px] w-[470px] rounded-full bg-[#fff8fc] blur-[130px]" />
             <div className="absolute right-[-185px] top-[-230px] h-[680px] w-[680px] rounded-full bg-[#eef9ff] blur-[165px]" />
-
             <div className="absolute bottom-[-120px] left-[14%] h-[340px] w-[340px] rounded-full bg-[#e7dcff] blur-[110px]" />
             <div className="absolute bottom-[-100px] right-[10%] h-[320px] w-[320px] rounded-full bg-[#dff4ff] blur-[110px]" />
-
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,216,236,0.24),transparent_34%),radial-gradient(circle_at_82%_8%,rgba(223,244,255,0.20),transparent_30%),radial-gradient(circle_at_18%_6%,rgba(231,220,255,0.18),transparent_28%)]" />
-            </>
+          </>
         ) : isRomance ? (
           <>
             <div className="absolute inset-0 bg-[linear-gradient(180deg,#faf6f2_0%,#f7f0eb_28%,#f8f3ef_62%,#fcfaf8_100%)]" />
@@ -389,7 +360,7 @@ export default function MediaShell({ activeGenre, mode }: Props) {
             <div className="absolute bottom-[-90px] left-[14%] h-[300px] w-[300px] rounded-full bg-[#d7dfcf] blur-[110px]" />
             <div className="absolute bottom-[-80px] right-[10%] h-[300px] w-[300px] rounded-full bg-[#efe7d3] blur-[110px]" />
           </>
-        ) : isHorror ? (
+        ) : (
           <>
             <div className="absolute inset-0 bg-[linear-gradient(180deg,#060606_0%,#0b090a_28%,#11090b_60%,#070707_100%)]" />
             <div className="absolute left-[-90px] top-[-100px] h-[320px] w-[320px] rounded-full bg-[#7d1f2a]/18 blur-[110px]" />
@@ -398,7 +369,7 @@ export default function MediaShell({ activeGenre, mode }: Props) {
             <div className="absolute bottom-[-80px] right-[10%] h-[300px] w-[300px] rounded-full bg-[#1b2225]/10 blur-[120px]" />
             <div className="absolute inset-0 opacity-[0.06] bg-[radial-gradient(circle_at_center,white_0.6px,transparent_0.8px)] bg-[size:14px_14px]" />
           </>
-        ) : null}
+        )}
       </div>
 
       <div className="mx-auto max-w-7xl px-5 py-8 md:px-8 lg:px-10">
@@ -407,14 +378,12 @@ export default function MediaShell({ activeGenre, mode }: Props) {
             isRofan
               ? "border-[#f0dbe5]"
               : isRomance
-              ? "border-[#e8ddda]"
-              : isSf
-              ? "border-[#17384a]"
-              : isMurim
-              ? "border-[#d8d0ba]"
-              : isHorror
-              ? "border-[#2a1a1d]"
-              : "border-white/10"
+                ? "border-[#e8ddda]"
+                : isSf
+                  ? "border-[#17384a]"
+                  : isMurim
+                    ? "border-[#d8d0ba]"
+                    : "border-[#2a1a1d]"
           }`}
         >
           <div>
@@ -445,22 +414,20 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                         ? "border border-[#f6bfd8] bg-[#fff0f7] text-[#c76790] shadow-sm hover:bg-[#ffe8f3]"
                         : "bg-white/70 text-[#b46b89] hover:bg-white hover:text-[#c76790]"
                       : isRomance
-                      ? isActive
-                        ? "border border-[#e6d2d6] bg-[#f8f1f2] text-[#a86f74] shadow-sm hover:bg-[#f3ebec]"
-                        : "bg-white/72 text-[#9a7278] hover:bg-white hover:text-[#a86f74]"
-                      : isSf
-                      ? isActive
-                        ? "border border-[#2aa8cf] bg-transparent text-[#8aefff] shadow-[0_0_24px_rgba(42,168,207,0.14)] hover:border-[#46cfff] hover:text-[#b6f6ff]"
-                        : "bg-transparent text-[#7ea6b8] hover:border-[#1f5168] hover:text-[#a3d8ec]"
-                      : isMurim
-                      ? isActive
-                        ? "border border-[#c6ba92] bg-[#f2ecdc] text-[#695c37] shadow-sm hover:bg-[#ece4d0]"
-                        : "bg-white/65 text-[#84785b] hover:bg-white hover:text-[#695c37]"
-                      : isHorror
-                      ? isActive
-                        ? "border border-[#6f2a34] bg-[#140d0f] text-[#e7c3c8] shadow-[0_0_22px_rgba(111,42,52,0.18)] hover:bg-[#1a0f12]"
-                        : "bg-[#0c0a0b]/80 text-[#8f7f82] hover:bg-[#121011] hover:text-[#c3a2a8]"
-                      : "bg-white/5 text-white/72 hover:bg-white/10 hover:text-white"
+                        ? isActive
+                          ? "border border-[#e6d2d6] bg-[#f8f1f2] text-[#a86f74] shadow-sm hover:bg-[#f3ebec]"
+                          : "bg-white/72 text-[#9a7278] hover:bg-white hover:text-[#a86f74]"
+                        : isSf
+                          ? isActive
+                            ? "border border-[#2aa8cf] bg-transparent text-[#8aefff] shadow-[0_0_24px_rgba(42,168,207,0.14)] hover:border-[#46cfff] hover:text-[#b6f6ff]"
+                            : "bg-transparent text-[#7ea6b8] hover:border-[#1f5168] hover:text-[#a3d8ec]"
+                          : isMurim
+                            ? isActive
+                              ? "border border-[#c6ba92] bg-[#f2ecdc] text-[#695c37] shadow-sm hover:bg-[#ece4d0]"
+                              : "bg-white/65 text-[#84785b] hover:bg-white hover:text-[#695c37]"
+                            : isActive
+                              ? "border border-[#6f2a34] bg-[#140d0f] text-[#e7c3c8] shadow-[0_0_22px_rgba(111,42,52,0.18)] hover:bg-[#1a0f12]"
+                              : "bg-[#0c0a0b]/80 text-[#8f7f82] hover:bg-[#121011] hover:text-[#c3a2a8]"
                   }`}
                 >
                   {item.label}
@@ -486,12 +453,12 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                   isRofan
                     ? "bg-[linear-gradient(to_top,rgba(255,250,252,0.94)_12%,rgba(255,250,252,0.34)_48%,rgba(255,250,252,0.08)_100%)]"
                     : isRomance
-                    ? "bg-[linear-gradient(to_top,rgba(255,250,251,0.92)_12%,rgba(255,250,251,0.28)_48%,rgba(255,250,251,0.08)_100%)]"
-                    : isSf
-                    ? "bg-[linear-gradient(to_top,rgba(3,10,18,0.88)_10%,rgba(3,10,18,0.26)_48%,rgba(3,10,18,0.04)_100%)]"
-                    : isMurim
-                    ? "bg-[linear-gradient(to_top,rgba(244,240,228,0.88)_10%,rgba(244,240,228,0.22)_45%,rgba(244,240,228,0.06)_100%)]"
-                    : "bg-[linear-gradient(to_top,rgba(7,7,7,0.92)_10%,rgba(7,7,7,0.34)_45%,rgba(7,7,7,0.10)_100%)]"
+                      ? "bg-[linear-gradient(to_top,rgba(255,250,251,0.92)_12%,rgba(255,250,251,0.28)_48%,rgba(255,250,251,0.08)_100%)]"
+                      : isSf
+                        ? "bg-[linear-gradient(to_top,rgba(3,10,18,0.88)_10%,rgba(3,10,18,0.26)_48%,rgba(3,10,18,0.04)_100%)]"
+                        : isMurim
+                          ? "bg-[linear-gradient(to_top,rgba(244,240,228,0.88)_10%,rgba(244,240,228,0.22)_45%,rgba(244,240,228,0.06)_100%)]"
+                          : "bg-[linear-gradient(to_top,rgba(7,7,7,0.92)_10%,rgba(7,7,7,0.34)_45%,rgba(7,7,7,0.10)_100%)]"
                 }`}
               />
 
@@ -520,23 +487,25 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                 </p>
 
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <button
-                    type="button"
+                  <Link
+                    href={watchHref}
                     className={`rounded-full px-5 py-3 text-sm font-semibold transition ${primaryButtonClass}`}
                   >
                     지금 재생
-                  </button>
+                  </Link>
+
+                  <Link
+                    href={freeEpisodeHref}
+                    className={`rounded-full px-5 py-3 text-sm font-semibold transition ${primaryButtonClass}`}
+                  >
+                    1화 무료 보기
+                  </Link>
+
                   <button
                     type="button"
                     className={`rounded-full border px-5 py-3 text-sm font-medium transition ${secondaryButtonClass}`}
                   >
                     예고편 보기
-                  </button>
-                  <button
-                    type="button"
-                    className={`rounded-full border px-5 py-3 text-sm font-medium transition ${secondaryButtonClass}`}
-                  >
-                    내 리스트
                   </button>
                 </div>
               </div>
@@ -641,12 +610,12 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                           isRofan
                             ? "bg-[#f2a8cb]"
                             : isRomance
-                            ? "bg-[#efc1b6]"
-                            : isSf
-                            ? "bg-[#65dcff]"
-                            : isMurim
-                            ? "bg-[#b4d486]"
-                            : "bg-[#c76b76]"
+                              ? "bg-[#efc1b6]"
+                              : isSf
+                                ? "bg-[#65dcff]"
+                                : isMurim
+                                  ? "bg-[#b4d486]"
+                                  : "bg-[#c76b76]"
                         }`}
                         style={{ width: item.progress }}
                       />
@@ -748,12 +717,12 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                 </div>
 
                 <div className="mt-7 flex flex-wrap gap-3">
-                  <button
-                    type="button"
+                  <Link
+                    href={watchHref}
                     className={`rounded-full px-5 py-3 text-sm font-semibold transition ${primaryButtonClass}`}
                   >
                     지금 감상하기
-                  </button>
+                  </Link>
                   <button
                     type="button"
                     className={`rounded-full border px-5 py-3 text-sm font-medium transition ${
