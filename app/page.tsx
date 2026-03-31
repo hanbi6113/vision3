@@ -125,14 +125,7 @@ function PosterCard({
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#050608] text-white">
-      <Link
-        href="/select-entry"
-        className="fixed left-0 top-1/2 z-[70] hidden -translate-y-1/2 rounded-r-2xl border border-white/10 border-l-0 bg-black/70 px-4 py-3 text-sm font-medium text-white/70 backdrop-blur-xl transition hover:border-white/20 hover:text-white xl:inline-flex"
-      >
-        ← 이전 엔트리 보기
-      </Link>
-
-      <div className="relative overflow-hidden">
+     <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(82,122,255,0.18),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(132,42,255,0.18),transparent_25%),linear-gradient(to_bottom,rgba(9,11,18,0.92),rgba(5,6,8,1))]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_top,rgba(5,6,8,1),rgba(5,6,8,0))]" />
 
