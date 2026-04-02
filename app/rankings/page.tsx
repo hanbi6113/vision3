@@ -1,6 +1,5 @@
 // app/rankings/page.tsx
 import Link from "next/link";
-import RankingPosterCard from "@/app/_components/ranking-poster-card";
 
 const imagePool = Array.from({ length: 20 }, (_, i) => `/images/img${i + 1}.jpg`);
 const pickImage = (index: number) => imagePool[index % imagePool.length];
@@ -19,6 +18,37 @@ const rankingList = [
   { rank: 11, title: "Neon Chamber", subtitle: "Action Series", image: pickImage(15), href: "/watch/neon-chamber" },
   { rank: 12, title: "Crown of Mist", subtitle: "Fantasy Drama", image: pickImage(16), href: "/watch/crown-of-mist" },
 ];
+
+function RankingPosterOnlyCard({
+  rank,
+  title,
+  image,
+  href,
+}: {
+  rank: number;
+  title: string;
+  image: string;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group block overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.03]"
+    >
+      <div className="relative aspect-[2/3] overflow-hidden">
+        <img
+          src={image}
+          alt={title}
+          className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04)_0%,rgba(0,0,0,0.10)_42%,rgba(0,0,0,0.48)_100%)]" />
+        <div className="absolute left-4 top-3 text-6xl font-black text-white/90">
+          {rank}
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 export default function RankingsPage() {
   return (
@@ -81,11 +111,10 @@ export default function RankingsPage() {
       <section className="mx-auto max-w-7xl px-5 pb-12 md:px-8 md:pb-16">
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
           {rankingList.map((item) => (
-            <RankingPosterCard
+            <RankingPosterOnlyCard
               key={item.rank}
               rank={item.rank}
               title={item.title}
-              subtitle={item.subtitle}
               image={item.image}
               href={item.href}
             />

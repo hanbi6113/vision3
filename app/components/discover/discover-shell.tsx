@@ -55,7 +55,6 @@ function getDiscoverSeriesTitles(activeGenre: GenreKey) {
 
 export default function DiscoverShell({ activeGenre }: Props) {
   const content = discoverData[activeGenre];
-  const theme = content.theme;
   const currentImages = genreImages[activeGenre];
   const discoverBasePath = `/discover/${activeGenre}`;
   const discoverSeriesTitles = getDiscoverSeriesTitles(activeGenre);
@@ -395,9 +394,9 @@ export default function DiscoverShell({ activeGenre }: Props) {
                         ? "border-[#e8d7d8] bg-[#fcf8f8] text-[#8e6d72]"
                         : isSf
                           ? "border-[#214f63] bg-transparent text-[#9ceeff]"
-                          : isMurim
-                            ? "border-[#d5c7a4] bg-[#fbf7ec] text-[#7a6840]"
-                            : "border-[#382126] bg-[#100c0d] text-[#ccb2b6]"
+                        : isMurim
+                          ? "border-[#d5c7a4] bg-[#fbf7ec] text-[#7a6840]"
+                          : "border-[#382126] bg-[#100c0d] text-[#ccb2b6]"
                   }`}
                 >
                   디스커벌에서는 시리즈 1화만 무료로 공개돼. 다음 화는 락 처리되고 정식 시청으로 이어지게 돼.
@@ -500,7 +499,7 @@ export default function DiscoverShell({ activeGenre }: Props) {
                                 ? "text-[#8fb4c3]"
                                 : isMurim
                                   ? "text-[#716958]"
-                                : "text-[#998c8f]"
+                                  : "text-[#998c8f]"
                         }`}
                       >
                         {card.tagline}
@@ -576,53 +575,7 @@ export default function DiscoverShell({ activeGenre }: Props) {
                   </div>
 
                   <div className="p-5">
-                    <p
-                      className={`text-sm font-semibold ${
-                        isRofan
-                          ? "text-[#c07a92]"
-                          : isRomance
-                            ? "text-[#b07a80]"
-                            : isSf
-                              ? "text-[#8aefff]"
-                            : isMurim
-                              ? "text-[#8c8f5f]"
-                              : "text-[#c97882]"
-                      }`}
-                    >
-                      {item.subtitle}
-                    </p>
-                    <h3
-                      className={`mt-2 text-xl font-extrabold ${
-                        isRofan
-                          ? "text-[#563b41]"
-                          : isRomance
-                            ? "text-[#4f3a3f]"
-                            : isSf
-                              ? "text-[#e8f7ff]"
-                              : isMurim
-                                ? "text-[#413a2c]"
-                                : "text-[#f1ebeb]"
-                      }`}
-                    >
-                      {item.title}
-                    </h3>
-                    <p
-                      className={`mt-3 text-sm leading-6 ${
-                        isRofan
-                          ? "text-[#79666b]"
-                          : isRomance
-                            ? "text-[#746166]"
-                            : isSf
-                              ? "text-[#8fb4c3]"
-                              : isMurim
-                                ? "text-[#716958]"
-                                : "text-[#968a8c]"
-                      }`}
-                    >
-                      {item.tagline}
-                    </p>
-
-                    <div className="mt-5">
+                    <div className="mt-1">
                       <Link
                         href={href}
                         className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${cardButtonClass}`}
@@ -686,62 +639,13 @@ export default function DiscoverShell({ activeGenre }: Props) {
                       sizes="(max-width: 1024px) 100vw, 33vw"
                     />
                     <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.60),rgba(0,0,0,0.08))]" />
-
                     <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
                       1화 무료 공개
                     </div>
                   </div>
 
                   <div className="p-6">
-                    <p
-                      className={`text-sm font-semibold ${
-                        isRofan
-                          ? "text-[#c07a92]"
-                          : isRomance
-                            ? "text-[#b07a80]"
-                            : isSf
-                              ? "text-[#8aefff]"
-                              : isMurim
-                                ? "text-[#8c8f5f]"
-                                : "text-[#c97882]"
-                      }`}
-                    >
-                      {item.subtitle}
-                    </p>
-
-                    <h3
-                      className={`mt-2 text-2xl font-extrabold ${
-                        isRofan
-                          ? "text-[#563b41]"
-                          : isRomance
-                            ? "text-[#4f3a3f]"
-                            : isSf
-                              ? "text-[#e8f7ff]"
-                              : isMurim
-                                ? "text-[#413a2c]"
-                                : "text-[#f1ebeb]"
-                      }`}
-                    >
-                      {item.title}
-                    </h3>
-
-                    <p
-                      className={`mt-3 text-sm leading-7 ${
-                        isRofan
-                          ? "text-[#79666b]"
-                          : isRomance
-                            ? "text-[#746166]"
-                            : isSf
-                              ? "text-[#8fb4c3]"
-                              : isMurim
-                                ? "text-[#716958]"
-                                : "text-[#968a8c]"
-                      }`}
-                    >
-                      {item.description}
-                    </p>
-
-                    <div className="mt-5">
+                    <div className="mt-1">
                       <Link
                         href={href}
                         className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${cardButtonClass}`}

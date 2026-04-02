@@ -1,10 +1,10 @@
 // components/media/media-shell.tsx
+import Image from "next/image";
+import Link from "next/link";
 import {
   discoverFreeSlugByGenre,
   watchEntrySlugByMode,
 } from "@/data/watch-data";
-import Image from "next/image";
-import Link from "next/link";
 import {
   discoverData,
   genreMenu,
@@ -48,8 +48,7 @@ const copyByMode: Record<
   series: {
     rofan: {
       hallName: "Royal Fantasy Drama Hall",
-      hallDesc:
-        "황궁의 긴장감과 감정선을 더 화려하게 보여주는 프리미엄 드라마 상영관.",
+      hallDesc: "황궁의 긴장감과 감정선을 더 화려하게 보여주는 프리미엄 드라마 상영관.",
       continueLabel: "궁정 드라마 이어보기",
       trendingLabel: "지금 가장 주목받는 궁정 드라마",
       shelfA: "오늘의 황궁 드라마",
@@ -59,8 +58,7 @@ const copyByMode: Record<
     },
     romance: {
       hallName: "Romance Drama Hall",
-      hallDesc:
-        "조용한 감정선과 여운이 오래 남는 작품을 모은 프리미엄 로맨스 드라마 관.",
+      hallDesc: "조용한 감정선과 여운이 오래 남는 작품을 모은 프리미엄 로맨스 드라마 관.",
       continueLabel: "감정선 드라마 이어보기",
       trendingLabel: "오늘의 로맨스 드라마 인기작",
       shelfA: "여운이 남는 드라마",
@@ -70,8 +68,7 @@ const copyByMode: Record<
     },
     sf: {
       hallName: "Science Fiction Drama Hall",
-      hallDesc:
-        "미래 도시와 시스템 서사를 더 강하게 몰입해서 보는 프리미엄 SF 드라마 관.",
+      hallDesc: "미래 도시와 시스템 서사를 더 강하게 몰입해서 보는 프리미엄 SF 드라마 관.",
       continueLabel: "시스템 드라마 이어보기",
       trendingLabel: "지금 가장 반응이 큰 SF 드라마",
       shelfA: "System Drama Picks",
@@ -81,8 +78,7 @@ const copyByMode: Record<
     },
     murim: {
       hallName: "Murim Drama Hall",
-      hallDesc:
-        "문파와 검객의 흐름을 더 묵직하게 보여주는 프리미엄 무협 드라마 상영관.",
+      hallDesc: "문파와 검객의 흐름을 더 묵직하게 보여주는 프리미엄 무협 드라마 상영관.",
       continueLabel: "강호 드라마 이어보기",
       trendingLabel: "지금 가장 강한 무협 드라마",
       shelfA: "문파 드라마 추천",
@@ -92,8 +88,7 @@ const copyByMode: Record<
     },
     horror: {
       hallName: "Horror Drama Hall",
-      hallDesc:
-        "불길한 정적과 심리적 긴장을 더 진하게 체감하게 하는 프리미엄 공포 드라마 관.",
+      hallDesc: "불길한 정적과 심리적 긴장을 더 진하게 체감하게 하는 프리미엄 공포 드라마 관.",
       continueLabel: "이상 징후 드라마 이어보기",
       trendingLabel: "Tonight’s Horror Drama Picks",
       shelfA: "가장 반응이 큰 공포 드라마",
@@ -105,8 +100,7 @@ const copyByMode: Record<
   movies: {
     rofan: {
       hallName: "Royal Fantasy Movie Hall",
-      hallDesc:
-        "황궁의 긴장감과 감정선을 더 화려하게 보여주는 프리미엄 영화 상영관.",
+      hallDesc: "황궁의 긴장감과 감정선을 더 화려하게 보여주는 프리미엄 영화 상영관.",
       continueLabel: "황궁 영화 이어보기",
       trendingLabel: "지금 가장 주목받는 궁정 영화",
       shelfA: "오늘의 황궁 영화",
@@ -116,8 +110,7 @@ const copyByMode: Record<
     },
     romance: {
       hallName: "Romance Movie Hall",
-      hallDesc:
-        "조용한 감정선과 여운이 오래 남는 작품을 모은 프리미엄 로맨스 영화 관.",
+      hallDesc: "조용한 감정선과 여운이 오래 남는 작품을 모은 프리미엄 로맨스 영화 관.",
       continueLabel: "감정선 영화 이어보기",
       trendingLabel: "오늘의 로맨스 영화 인기작",
       shelfA: "여운이 남는 영화",
@@ -127,8 +120,7 @@ const copyByMode: Record<
     },
     sf: {
       hallName: "Science Fiction Movie Hall",
-      hallDesc:
-        "미래 도시와 시스템 서사를 더 강하게 몰입해서 보는 프리미엄 SF 영화 관.",
+      hallDesc: "미래 도시와 시스템 서사를 더 강하게 몰입해서 보는 프리미엄 SF 영화 관.",
       continueLabel: "시스템 영화 이어보기",
       trendingLabel: "지금 가장 반응이 큰 SF 영화",
       shelfA: "System Movie Picks",
@@ -138,8 +130,7 @@ const copyByMode: Record<
     },
     murim: {
       hallName: "Murim Movie Hall",
-      hallDesc:
-        "문파와 검객의 흐름을 더 묵직하게 보여주는 프리미엄 무협 영화 상영관.",
+      hallDesc: "문파와 검객의 흐름을 더 묵직하게 보여주는 프리미엄 무협 영화 상영관.",
       continueLabel: "강호 영화 이어보기",
       trendingLabel: "지금 가장 강한 무협 영화",
       shelfA: "문파 영화 추천",
@@ -149,8 +140,7 @@ const copyByMode: Record<
     },
     horror: {
       hallName: "Horror Movie Hall",
-      hallDesc:
-        "불길한 정적과 심리적 긴장을 더 진하게 체감하게 하는 프리미엄 공포 영화 관.",
+      hallDesc: "불길한 정적과 심리적 긴장을 더 진하게 체감하게 하는 프리미엄 공포 영화 관.",
       continueLabel: "이상 징후 영화 이어보기",
       trendingLabel: "Tonight’s Horror Movie Picks",
       shelfA: "가장 반응이 큰 공포 영화",
@@ -163,12 +153,12 @@ const copyByMode: Record<
 
 export default function MediaShell({ activeGenre, mode }: Props) {
   const content = discoverData[activeGenre];
-  const theme = content.theme;
   const currentImages = genreImages[activeGenre];
   const copy = copyByMode[mode][activeGenre];
 
   const routeBase = mode === "series" ? "series" : "movies";
   const hallPath = `/${routeBase}/${activeGenre}`;
+
   const watchHref = `/watch/${watchEntrySlugByMode[mode][activeGenre]}?returnTo=${encodeURIComponent(
     hallPath
   )}`;
@@ -188,8 +178,6 @@ export default function MediaShell({ activeGenre, mode }: Props) {
       ? "같은 레이아웃 안에서 장르마다 다른 상영관에 들어온 것처럼 보이게 설계한 프리미엄 드라마 홈이야."
       : "같은 레이아웃 안에서 장르마다 다른 상영관에 들어온 것처럼 보이게 설계한 프리미엄 영화 홈이야.";
 
-  const heroImage = currentImages[0];
-
   const continueWatching = currentImages.map((image, index) => ({
     title: `${content.project.title} · ${String(index + 1).padStart(2, "0")}`,
     subtitle: content.story.beats[index % content.story.beats.length],
@@ -199,30 +187,26 @@ export default function MediaShell({ activeGenre, mode }: Props) {
 
   const trendingCards = Array.from({ length: 5 }, (_, index) => ({
     rank: index + 1,
-    title: `${content.panels[index % content.panels.length].title}`,
-    subtitle: content.protagonist.tags[index % content.protagonist.tags.length],
     image: currentImages[index % currentImages.length],
+    title: content.panels[index % content.panels.length].title,
   }));
 
   const shelfA = Array.from({ length: 6 }, (_, index) => ({
-    title: `${content.panels[index % content.panels.length].title}`,
-    desc: content.panels[index % content.panels.length].desc,
     image: currentImages[index % currentImages.length],
     tag: content.panels[index % content.panels.length].tag,
+    title: content.panels[index % content.panels.length].title,
   }));
 
   const shelfB = Array.from({ length: 6 }, (_, index) => ({
-    title: `${content.story.beats[index % content.story.beats.length]}`,
-    desc: content.notes[index % content.notes.length].desc,
     image: currentImages[(index + 1) % currentImages.length],
     tag: content.notes[index % content.notes.length].label,
+    title: content.story.beats[index % content.story.beats.length],
   }));
 
   const upcoming = currentImages.map((image, index) => ({
-    title: `${content.label} New Drop ${index + 1}`,
-    desc: content.actions[index % content.actions.length],
     image,
     day: releaseDays[index % releaseDays.length],
+    title: `${content.label} New Drop ${index + 1}`,
   }));
 
   const isRofan = activeGenre === "rofan";
@@ -387,9 +371,7 @@ export default function MediaShell({ activeGenre, mode }: Props) {
           }`}
         >
           <div>
-            <p
-              className={`mt-6 text-xs font-bold uppercase tracking-[0.30em] ${accentColorClass}`}
-            >
+            <p className={`mt-6 text-xs font-bold uppercase tracking-[0.30em] ${accentColorClass}`}>
               {brandLabel}
             </p>
             <h1 className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">
@@ -441,7 +423,7 @@ export default function MediaShell({ activeGenre, mode }: Props) {
           <div className="grid gap-0 xl:grid-cols-[1.1fr_0.9fr]">
             <div className="relative min-h-[560px] overflow-hidden">
               <Image
-                src={heroImage}
+                src={currentImages[0]}
                 alt={`${content.label} hall hero`}
                 fill
                 className="object-cover"
@@ -463,14 +445,10 @@ export default function MediaShell({ activeGenre, mode }: Props) {
               />
 
               <div className="absolute left-6 top-6 flex flex-wrap gap-2">
-                <span
-                  className={`rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] ${chipClass}`}
-                >
+                <span className={`rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] ${chipClass}`}>
                   {copy.hallName}
                 </span>
-                <span
-                  className={`rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] ${softChipClass}`}
-                >
+                <span className={`rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] ${softChipClass}`}>
                   Genre Hall
                 </span>
               </div>
@@ -493,14 +471,12 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                   >
                     지금 재생
                   </Link>
-
                   <Link
                     href={freeEpisodeHref}
                     className={`rounded-full px-5 py-3 text-sm font-semibold transition ${primaryButtonClass}`}
                   >
                     1화 무료 보기
                   </Link>
-
                   <button
                     type="button"
                     className={`rounded-full border px-5 py-3 text-sm font-medium transition ${secondaryButtonClass}`}
@@ -530,9 +506,7 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                   {content.protagonist.name}
                 </h3>
                 <p className={`mt-2 text-sm ${bodyColorClass}`}>{content.protagonist.role}</p>
-                <p className={`mt-4 text-sm leading-7 ${bodyColorClass}`}>
-                  {content.protagonist.desc}
-                </p>
+                <p className={`mt-4 text-sm leading-7 ${bodyColorClass}`}>{content.protagonist.desc}</p>
               </article>
 
               <article className={`rounded-[28px] border p-6 ${shellClass}`}>
@@ -540,7 +514,6 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                   Story Note
                 </p>
                 <p className={`mt-4 text-sm leading-7 ${bodyColorClass}`}>{content.hero.note}</p>
-
                 <div className="mt-5 flex flex-wrap gap-2">
                   {content.protagonist.tags.map((tag) => (
                     <span
@@ -553,25 +526,6 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                 </div>
               </article>
             </div>
-          </div>
-        </section>
-
-        <section className="pt-10">
-          <div className="grid gap-5 md:grid-cols-3">
-            {content.stats.map((stat) => (
-              <article
-                key={stat.label}
-                className={`rounded-[28px] border p-6 backdrop-blur-xl ${shellClass}`}
-              >
-                <p className={`text-xs font-bold uppercase tracking-[0.24em] ${accentColorClass}`}>
-                  {stat.label}
-                </p>
-                <h3 className={`mt-3 text-4xl font-extrabold ${titleColorClass}`}>
-                  {stat.value}
-                </h3>
-                <p className={`mt-3 text-sm leading-7 ${bodyColorClass}`}>{stat.desc}</p>
-              </article>
-            ))}
           </div>
         </section>
 
@@ -601,7 +555,6 @@ export default function MediaShell({ activeGenre, mode }: Props) {
 
                 <div className="p-5">
                   <p className={`text-sm font-semibold ${accentColorClass}`}>{item.subtitle}</p>
-                  <h3 className={`mt-2 text-xl font-extrabold ${titleColorClass}`}>{item.title}</h3>
 
                   <div className="mt-4">
                     <div className="h-2 w-full rounded-full bg-black/10">
@@ -656,103 +609,8 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                     {item.rank}
                   </div>
                 </div>
-
-                <div className="p-5">
-                  <p className={`text-sm font-semibold ${accentColorClass}`}>{item.subtitle}</p>
-                  <h3 className={`mt-2 text-xl font-extrabold ${titleColorClass}`}>{item.title}</h3>
-                </div>
               </article>
             ))}
-          </div>
-        </section>
-
-        <section className="pt-10">
-          <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className={`overflow-hidden rounded-[34px] border ${shellClass}`}>
-              <div className={`h-full min-h-[360px] ${content.project.visual} p-7`}>
-                <p
-                  className={`text-xs font-bold uppercase tracking-[0.28em] ${
-                    isSf || isHorror ? "text-white/80" : accentColorClass
-                  }`}
-                >
-                  {content.project.eyebrow}
-                </p>
-
-                <h2
-                  className={`mt-4 text-4xl font-extrabold leading-tight ${
-                    isSf || isHorror ? "text-white" : titleColorClass
-                  }`}
-                >
-                  {content.project.title}
-                </h2>
-
-                <p
-                  className={`mt-4 max-w-2xl text-sm leading-7 ${
-                    isSf || isHorror ? "text-white/85" : "text-black/70"
-                  }`}
-                >
-                  {content.project.desc}
-                </p>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                  {[
-                    ["Episode", content.project.episode],
-                    ["Status", content.project.status],
-                    ["Point", content.project.point],
-                  ].map(([label, value]) => (
-                    <div
-                      key={label}
-                      className={`rounded-[18px] border px-4 py-4 ${
-                        isSf || isHorror
-                          ? "border-white/14 bg-black/20 text-white"
-                          : "border-black/10 bg-white/50 text-black/75"
-                      }`}
-                    >
-                      <p className="text-[11px] font-bold uppercase tracking-[0.18em] opacity-70">
-                        {label}
-                      </p>
-                      <p className="mt-2 text-sm font-semibold">{value}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-7 flex flex-wrap gap-3">
-                  <Link
-                    href={watchHref}
-                    className={`rounded-full px-5 py-3 text-sm font-semibold transition ${primaryButtonClass}`}
-                  >
-                    지금 감상하기
-                  </Link>
-                  <button
-                    type="button"
-                    className={`rounded-full border px-5 py-3 text-sm font-medium transition ${
-                      isSf || isHorror
-                        ? "border-white/16 bg-black/20 text-white/85 hover:bg-black/30"
-                        : "border-black/10 bg-white/60 text-black/70 hover:bg-white"
-                    }`}
-                  >
-                    상세 정보 보기
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid gap-5">
-              {content.notes.map((note) => (
-                <article
-                  key={note.title}
-                  className={`rounded-[30px] border p-6 backdrop-blur-xl ${shellClass}`}
-                >
-                  <p className={`text-xs font-bold uppercase tracking-[0.24em] ${accentColorClass}`}>
-                    {copy.editorLabel}
-                  </p>
-                  <h3 className={`mt-3 text-2xl font-extrabold ${titleColorClass}`}>
-                    {note.title}
-                  </h3>
-                  <p className={`mt-4 text-sm leading-7 ${bodyColorClass}`}>{note.desc}</p>
-                </article>
-              ))}
-            </div>
           </div>
         </section>
 
@@ -764,13 +622,13 @@ export default function MediaShell({ activeGenre, mode }: Props) {
             </button>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-6">
             {shelfA.map((item, index) => (
               <article
                 key={`${item.title}-${index}`}
                 className={`overflow-hidden rounded-[28px] border ${shellClass}`}
               >
-                <div className="relative h-[220px]">
+                <div className="relative h-[320px]">
                   <Image
                     src={item.image}
                     alt={item.title}
@@ -778,14 +636,11 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                     className="object-cover"
                     sizes="(max-width: 1280px) 100vw, 16vw"
                   />
-                </div>
-
-                <div className="p-5">
-                  <p className={`text-xs font-bold uppercase tracking-[0.18em] ${accentColorClass}`}>
-                    {item.tag}
-                  </p>
-                  <h3 className={`mt-2 text-lg font-extrabold ${titleColorClass}`}>{item.title}</h3>
-                  <p className={`mt-3 text-sm leading-6 ${bodyColorClass}`}>{item.desc}</p>
+                  <div className="absolute left-4 top-4">
+                    <span className={`rounded-full border px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] ${chipClass}`}>
+                      {item.tag}
+                    </span>
+                  </div>
                 </div>
               </article>
             ))}
@@ -796,17 +651,17 @@ export default function MediaShell({ activeGenre, mode }: Props) {
           <div className="mb-5 flex items-end justify-between">
             <h2 className={`text-3xl font-extrabold ${titleColorClass}`}>{copy.shelfB}</h2>
             <button type="button" className={`text-sm font-semibold ${accentColorClass}`}>
-              전체 보기
+              큐레이션 보기
             </button>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-6">
             {shelfB.map((item, index) => (
               <article
                 key={`${item.title}-${index}`}
                 className={`overflow-hidden rounded-[28px] border ${shellClass}`}
               >
-                <div className="relative h-[220px]">
+                <div className="relative h-[320px]">
                   <Image
                     src={item.image}
                     alt={item.title}
@@ -814,35 +669,58 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                     className="object-cover"
                     sizes="(max-width: 1280px) 100vw, 16vw"
                   />
-                </div>
-
-                <div className="p-5">
-                  <p className={`text-xs font-bold uppercase tracking-[0.18em] ${accentColorClass}`}>
-                    {item.tag}
-                  </p>
-                  <h3 className={`mt-2 text-lg font-extrabold ${titleColorClass}`}>{item.title}</h3>
-                  <p className={`mt-3 text-sm leading-6 ${bodyColorClass}`}>{item.desc}</p>
+                  <div className="absolute left-4 top-4">
+                    <span className={`rounded-full border px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] ${softChipClass}`}>
+                      {item.tag}
+                    </span>
+                  </div>
                 </div>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="pb-10 pt-10">
+        <section className="pt-10">
+          <div className="mb-5 flex items-end justify-between">
+            <h2 className={`text-3xl font-extrabold ${titleColorClass}`}>{copy.editorLabel}</h2>
+            <button type="button" className={`text-sm font-semibold ${accentColorClass}`}>
+              대표작 보기
+            </button>
+          </div>
+
+          <article className={`overflow-hidden rounded-[32px] border ${shellClass}`}>
+            <div className="relative h-[420px]">
+              <Image
+                src={currentImages[1 % currentImages.length]}
+                alt={content.project.title}
+                fill
+                className="object-cover"
+                sizes="100vw"
+              />
+              <div className="absolute left-5 top-5">
+                <span className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] ${chipClass}`}>
+                  {content.project.point}
+                </span>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section className="pt-10">
           <div className="mb-5 flex items-end justify-between">
             <h2 className={`text-3xl font-extrabold ${titleColorClass}`}>{copy.upcomingLabel}</h2>
             <button type="button" className={`text-sm font-semibold ${accentColorClass}`}>
-              공개 일정
+              일정 보기
             </button>
           </div>
 
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {upcoming.map((item) => (
+            {upcoming.map((item, index) => (
               <article
-                key={`${item.title}-${item.day}`}
+                key={`${item.title}-${index}`}
                 className={`overflow-hidden rounded-[28px] border ${shellClass}`}
               >
-                <div className="relative h-[220px]">
+                <div className="relative h-[250px]">
                   <Image
                     src={item.image}
                     alt={item.title}
@@ -850,16 +728,11 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                     className="object-cover"
                     sizes="(max-width: 1280px) 100vw, 25vw"
                   />
-                </div>
-
-                <div className="p-5">
-                  <span
-                    className={`rounded-full border px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] ${softChipClass}`}
-                  >
-                    {item.day}
-                  </span>
-                  <h3 className={`mt-3 text-xl font-extrabold ${titleColorClass}`}>{item.title}</h3>
-                  <p className={`mt-3 text-sm leading-6 ${bodyColorClass}`}>{item.desc}</p>
+                  <div className="absolute left-4 top-4">
+                    <span className={`rounded-full border px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] ${chipClass}`}>
+                      {item.day}
+                    </span>
+                  </div>
                 </div>
               </article>
             ))}

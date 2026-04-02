@@ -85,38 +85,33 @@ function SectionHeader({
   );
 }
 
-function PosterCard({
-  title,
-  subtitle,
+function PosterOnlyCard({
   image,
+  alt,
   badge,
+  aspect = "aspect-[2/3]",
 }: {
-  title: string;
-  subtitle: string;
   image: string;
+  alt: string;
   badge?: string;
+  aspect?: string;
 }) {
   return (
     <article className="group overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.03]">
-      <div className="relative aspect-[2/3] overflow-hidden">
+      <div className={`relative overflow-hidden ${aspect}`}>
         <Image
           src={image}
-          alt={title}
+          alt={alt}
           fill
           className="object-cover transition duration-700 group-hover:scale-[1.04]"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.06)_0%,rgba(0,0,0,0.18)_38%,rgba(0,0,0,0.82)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.06)_0%,rgba(0,0,0,0.16)_42%,rgba(0,0,0,0.70)_100%)]" />
 
         {badge && (
           <div className="absolute left-4 top-4 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur">
             {badge}
           </div>
         )}
-
-        <div className="absolute inset-x-0 bottom-0 p-4">
-          <p className="text-lg font-semibold text-white">{title}</p>
-          <p className="mt-1 text-sm text-white/72">{subtitle}</p>
-        </div>
       </div>
     </article>
   );
@@ -125,7 +120,7 @@ function PosterCard({
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#050608] text-white">
-     <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(82,122,255,0.18),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(132,42,255,0.18),transparent_25%),linear-gradient(to_bottom,rgba(9,11,18,0.92),rgba(5,6,8,1))]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_top,rgba(5,6,8,1),rgba(5,6,8,0))]" />
 
@@ -223,12 +218,11 @@ export default function HomePage() {
             >
               <div className="relative h-[210px] overflow-hidden">
                 <Image src={item.image} alt={item.title} fill className="object-cover" />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.24)_48%,rgba(0,0,0,0.82)_100%)]" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.20)_48%,rgba(0,0,0,0.70)_100%)]" />
               </div>
 
               <div className="p-5">
-                <p className="text-sm text-white/60">{item.subtitle}</p>
-                <h3 className="mt-2 text-xl font-semibold text-white">{item.title}</h3>
+                <p className="text-sm text-white/68">{item.subtitle}</p>
 
                 <div className="mt-4">
                   <div className="h-2 w-full rounded-full bg-white/10">
@@ -259,14 +253,9 @@ export default function HomePage() {
             >
               <div className="relative aspect-[2/3] overflow-hidden">
                 <Image src={item.image} alt={item.title} fill className="object-cover" />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04)_0%,rgba(0,0,0,0.12)_42%,rgba(0,0,0,0.82)_100%)]" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04)_0%,rgba(0,0,0,0.10)_42%,rgba(0,0,0,0.48)_100%)]" />
                 <div className="absolute left-4 top-3 text-6xl font-black text-white/90">
                   {item.rank}
-                </div>
-
-                <div className="absolute inset-x-0 bottom-0 p-4">
-                  <p className="text-lg font-semibold text-white">{item.title}</p>
-                  <p className="mt-1 text-sm text-white/70">{item.subtitle}</p>
                 </div>
               </div>
             </article>
@@ -283,12 +272,11 @@ export default function HomePage() {
 
         <div className="grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-6">
           {trendingNow.map((item) => (
-            <PosterCard
+            <PosterOnlyCard
               key={item.title}
               badge={item.badge}
-              title={item.title}
-              subtitle={item.subtitle}
               image={item.image}
+              alt={item.title}
             />
           ))}
         </div>
@@ -303,23 +291,13 @@ export default function HomePage() {
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {discoverFree.map((item) => (
-            <article
+            <PosterOnlyCard
               key={item.title}
-              className="overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.03]"
-            >
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <Image src={item.image} alt={item.title} fill className="object-cover" />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(6,10,18,0.08)_0%,rgba(6,10,18,0.18)_38%,rgba(0,0,0,0.78)_100%)]" />
-                <div className="absolute left-4 top-4 rounded-full border border-cyan-400/30 bg-cyan-400/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-100">
-                  Free
-                </div>
-              </div>
-
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-white/62">{item.subtitle}</p>
-              </div>
-            </article>
+              badge="Free"
+              image={item.image}
+              alt={item.title}
+              aspect="aspect-[16/10]"
+            />
           ))}
         </div>
       </section>
