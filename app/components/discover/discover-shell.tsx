@@ -66,7 +66,9 @@ export default function DiscoverShell({ activeGenre }: Props) {
   const startCards = repeatedTitles.slice(0, 4);
   const expandedCards = repeatedTitles.slice(0, 8);
 
-  const heroImage = heroTitle?.coverImage ?? currentImages[0];
+  const getGenreImage = (index: number) => currentImages[index % currentImages.length];
+
+  const heroImage = getGenreImage(0);
   const heroWatchHref = heroTitle
     ? `/discover/watch/${heroTitle.slug}?returnTo=${encodeURIComponent(
         discoverBasePath
@@ -446,7 +448,7 @@ export default function DiscoverShell({ activeGenre }: Props) {
                   <div className="grid min-h-[172px] gap-0 md:grid-cols-[0.95fr_1.05fr]">
                     <div className="relative min-h-[172px]">
                       <Image
-                        src={card.coverImage}
+                        src={getGenreImage(index + 1)}
                         alt={card.title}
                         fill
                         className="object-cover"
@@ -564,7 +566,7 @@ export default function DiscoverShell({ activeGenre }: Props) {
                 >
                   <div className="relative h-[240px]">
                     <Image
-                      src={item.coverImage}
+                      src={getGenreImage(index)}
                       alt={item.title}
                       fill
                       className="object-cover"
@@ -679,7 +681,7 @@ export default function DiscoverShell({ activeGenre }: Props) {
                 >
                   <div className="relative h-[280px]">
                     <Image
-                      src={item.coverImage}
+                      src={getGenreImage(index)}
                       alt={item.title}
                       fill
                       className="object-cover"

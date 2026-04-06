@@ -163,7 +163,6 @@ const copyByMode: Record<
 
 export default function MediaShell({ activeGenre, mode }: Props) {
   const content = discoverData[activeGenre];
-  const theme = content.theme;
   const currentImages = genreImages[activeGenre];
   const copy = copyByMode[mode][activeGenre];
 
@@ -479,12 +478,6 @@ export default function MediaShell({ activeGenre, mode }: Props) {
                 <p className={`text-xs font-bold uppercase tracking-[0.28em] ${accentColorClass}`}>
                   {content.hero.eyebrow}
                 </p>
-                <h2 className={`mt-3 text-4xl font-extrabold leading-tight ${titleColorClass}`}>
-                  {content.project.title}
-                </h2>
-                <p className={`mt-4 max-w-2xl text-sm leading-7 ${bodyColorClass}`}>
-                  {content.project.desc}
-                </p>
 
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link
@@ -688,7 +681,7 @@ export default function MediaShell({ activeGenre, mode }: Props) {
 
                 <p
                   className={`mt-4 max-w-2xl text-sm leading-7 ${
-                    isSf || isHorror ? "text-white/85" : "text-black/70"
+                    isSf || isHorror ? "text-white/78" : bodyColorClass
                   }`}
                 >
                   {content.project.desc}
@@ -696,13 +689,13 @@ export default function MediaShell({ activeGenre, mode }: Props) {
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-3">
                   {[
-                    ["Episode", content.project.episode],
-                    ["Status", content.project.status],
-                    ["Point", content.project.point],
-                  ].map(([label, value]) => (
+                    { label: "Episode", value: content.project.episode },
+                    { label: "Status", value: content.project.status },
+                    { label: "Key Point", value: content.project.point },
+                  ].map(({ label, value }) => (
                     <div
                       key={label}
-                      className={`rounded-[18px] border px-4 py-4 ${
+                      className={`rounded-[20px] border p-4 ${
                         isSf || isHorror
                           ? "border-white/14 bg-black/20 text-white"
                           : "border-black/10 bg-white/50 text-black/75"

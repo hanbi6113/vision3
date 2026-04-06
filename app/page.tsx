@@ -87,12 +87,10 @@ function SectionHeader({
 
 function PosterCard({
   title,
-  subtitle,
   image,
   badge,
 }: {
   title: string;
-  subtitle: string;
   image: string;
   badge?: string;
 }) {
@@ -112,11 +110,6 @@ function PosterCard({
             {badge}
           </div>
         )}
-
-        <div className="absolute inset-x-0 bottom-0 p-4">
-          <p className="text-lg font-semibold text-white">{title}</p>
-          <p className="mt-1 text-sm text-white/72">{subtitle}</p>
-        </div>
       </div>
     </article>
   );
@@ -125,7 +118,7 @@ function PosterCard({
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#050608] text-white">
-     <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(82,122,255,0.18),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(132,42,255,0.18),transparent_25%),linear-gradient(to_bottom,rgba(9,11,18,0.92),rgba(5,6,8,1))]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_top,rgba(5,6,8,1),rgba(5,6,8,0))]" />
 
@@ -143,62 +136,70 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.05)_0%,rgba(0,0,0,0.16)_42%,rgba(0,0,0,0.92)_100%)]" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(92,132,255,0.22),transparent_26%),radial-gradient(circle_at_78%_18%,rgba(158,86,255,0.14),transparent_22%)]" />
 
-            <div className="relative flex min-h-[78vh] items-end">
-              <div className="w-full p-6 md:p-10 xl:p-14">
-                <div className="max-w-2xl space-y-5">
-                  <span className="inline-flex rounded-full border border-white/15 bg-black/30 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.24em] text-white/80 backdrop-blur">
+            <div className="relative flex min-h-[78vh] flex-col justify-between p-6 md:p-10 xl:p-14">
+              <div className="flex items-start">
+                <div className="space-y-3">
+                  <span className="inline-flex rounded-full border border-white/15 bg-black/30 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.24em] text-white/85 backdrop-blur">
                     {heroMain.subtitle}
                   </span>
 
-                  <div className="space-y-3">
-                    <p className="text-sm font-medium text-white/70">{heroMain.meta}</p>
-                    <h1 className="text-4xl font-semibold leading-[1.02] tracking-tight md:text-6xl xl:text-7xl">
-                      {heroMain.title}
-                    </h1>
-                    <p className="max-w-xl text-sm leading-7 text-white/72 md:text-base">
-                      {heroMain.desc}
-                    </p>
-                  </div>
+                  <p className="text-sm font-medium text-white/72">{heroMain.meta}</p>
+                </div>
+              </div>
 
-                  <div className="flex flex-wrap items-center gap-3 pt-2">
+              <div className="w-full">
+                <div className="max-w-4xl">
+                  <div className="flex flex-wrap items-center gap-4 pt-2">
                     <Link
                       href="/watch/the-last-scene-of-summer"
-                      className="inline-flex items-center rounded-full border border-white/12 bg-white/10 px-6 py-3 text-sm font-medium text-white transition hover:bg-white/15"
+                      className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/15 bg-white/12 px-7 text-[15px] font-semibold text-white backdrop-blur-md transition hover:bg-white/18"
                     >
                       ▶ 재생
                     </Link>
 
                     <Link
                       href="/discover"
-                      className="inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-6 py-3 text-sm font-medium text-cyan-100 transition hover:bg-cyan-400/15"
+                      className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-cyan-300/30 bg-cyan-400/15 px-7 text-[15px] font-semibold text-cyan-50 backdrop-blur-md transition hover:bg-cyan-400/22"
                     >
                       무료 둘러보기
                     </Link>
                   </div>
 
-                  <div className="grid gap-3 pt-4 sm:grid-cols-3">
-                    <div className="rounded-2xl border border-white/10 bg-black/20 p-4 backdrop-blur">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-white/42">
+                  <div className="grid gap-5 pt-6 sm:grid-cols-3">
+                    <div className="min-h-[190px] rounded-[28px] border border-white/10 bg-black/25 p-6 backdrop-blur-md md:min-h-[210px] md:p-7">
+                      <p className="text-[12px] uppercase tracking-[0.2em] text-white/42">
                         Main Mode
                       </p>
-                      <p className="mt-2 text-lg font-semibold text-white">OTT First</p>
-                      <p className="mt-1 text-sm text-white/60">프리미엄 스트리밍 중심</p>
+                      <p className="mt-4 text-[26px] font-semibold leading-tight text-white md:text-[30px]">
+                        OTT First
+                      </p>
+                      <p className="mt-3 text-base leading-7 text-white/65 md:text-[17px]">
+                        프리미엄 스트리밍 중심
+                      </p>
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-black/20 p-4 backdrop-blur">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-white/42">
+                    <div className="min-h-[190px] rounded-[28px] border border-white/10 bg-black/25 p-6 backdrop-blur-md md:min-h-[210px] md:p-7">
+                      <p className="text-[12px] uppercase tracking-[0.2em] text-white/42">
                         Discovery
                       </p>
-                      <p className="mt-2 text-lg font-semibold text-white">Free Entry</p>
-                      <p className="mt-1 text-sm text-white/60">무료 탐색 유입 구조</p>
+                      <p className="mt-4 text-[26px] font-semibold leading-tight text-white md:text-[30px]">
+                        Free Entry
+                      </p>
+                      <p className="mt-3 text-base leading-7 text-white/65 md:text-[17px]">
+                        무료 탐색 유입 구조
+                      </p>
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-black/20 p-4 backdrop-blur">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-white/42">
+                    <div className="min-h-[190px] rounded-[28px] border border-white/10 bg-black/25 p-6 backdrop-blur-md md:min-h-[210px] md:p-7">
+                      <p className="text-[12px] uppercase tracking-[0.2em] text-white/42">
                         Extension
                       </p>
-                      <p className="mt-2 text-lg font-semibold text-white">Market</p>
-                      <p className="mt-1 text-sm text-white/60">세계관 소비 확장</p>
+                      <p className="mt-4 text-[26px] font-semibold leading-tight text-white md:text-[30px]">
+                        Market
+                      </p>
+                      <p className="mt-3 text-base leading-7 text-white/65 md:text-[17px]">
+                        세계관 소비 확장
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -211,8 +212,6 @@ export default function HomePage() {
       <section className="mx-auto max-w-7xl px-5 py-8 md:px-8 md:py-12">
         <SectionHeader
           title="계속 시청하기"
-          action="전체 보기"
-          actionHref="/continue-watching"
         />
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -228,7 +227,6 @@ export default function HomePage() {
 
               <div className="p-5">
                 <p className="text-sm text-white/60">{item.subtitle}</p>
-                <h3 className="mt-2 text-xl font-semibold text-white">{item.title}</h3>
 
                 <div className="mt-4">
                   <div className="h-2 w-full rounded-full bg-white/10">
@@ -263,11 +261,6 @@ export default function HomePage() {
                 <div className="absolute left-4 top-3 text-6xl font-black text-white/90">
                   {item.rank}
                 </div>
-
-                <div className="absolute inset-x-0 bottom-0 p-4">
-                  <p className="text-lg font-semibold text-white">{item.title}</p>
-                  <p className="mt-1 text-sm text-white/70">{item.subtitle}</p>
-                </div>
               </div>
             </article>
           ))}
@@ -287,7 +280,6 @@ export default function HomePage() {
               key={item.title}
               badge={item.badge}
               title={item.title}
-              subtitle={item.subtitle}
               image={item.image}
             />
           ))}
@@ -316,8 +308,7 @@ export default function HomePage() {
               </div>
 
               <div className="p-5">
-                <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-white/62">{item.subtitle}</p>
+                <p className="text-sm leading-6 text-white/62">{item.subtitle}</p>
               </div>
             </article>
           ))}
